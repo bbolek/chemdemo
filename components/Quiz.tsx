@@ -75,13 +75,13 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
         </h3>
         <p className="text-lg">
           {ratio === 1
-            ? t("Mükemmel! Sen tam bir kimya kedisisin! 🏆", "Perfect! You are a true chemistry cat! 🏆")
+            ? t("Mükemmel! Sen tam bir kimya kedisisin! 🏆", "Perfect! You are a true chemistry cat! 🏆", "Perfekt! Du bist eine echte Chemie-Katze! 🏆")
             : ratio >= 0.6
-              ? t("Harika iş! Biraz daha pratikle zirvedesin! ✨", "Great job! A bit more practice and you're at the top! ✨")
-              : t("Olsun, tekrar deneyelim! Hata yapmak da öğrenmenin parçası 💪", "No worries, let's try again! Mistakes are part of learning 💪")}
+              ? t("Harika iş! Biraz daha pratikle zirvedesin! ✨", "Great job! A bit more practice and you're at the top! ✨", "Super gemacht! Noch ein bisschen Übung und du bist ganz oben! ✨")
+              : t("Olsun, tekrar deneyelim! Hata yapmak da öğrenmenin parçası 💪", "No worries, let's try again! Mistakes are part of learning 💪", "Kein Problem, versuchen wir es nochmal! Fehler gehören zum Lernen dazu 💪")}
         </p>
         <button type="button" className="btn bg-mint-deep" onClick={restart}>
-          {t("Tekrar Dene 🔁", "Try Again 🔁")}
+          {t("Tekrar Dene 🔁", "Try Again 🔁", "Nochmal 🔁")}
         </button>
       </motion.div>
     );
@@ -93,7 +93,7 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <div className="flex items-center justify-between font-display font-bold text-ink-soft">
         <span>
-          {t("Soru", "Question")} {i + 1} / {questions.length}
+          {t("Soru", "Question", "Frage")} {i + 1} / {questions.length}
         </span>
         <span>⭐ {score}</span>
       </div>
@@ -129,11 +129,11 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 flex flex-wrap items-center gap-3">
               <Cat color={catColor} mood={correct ? "happy" : "sad"} size={64} bounce={false} className="shrink-0" />
               <div className="min-w-0 flex-1 basis-52">
-                <p className="font-display text-lg font-bold">{correct ? t("Doğru! 🎉", "Correct! 🎉") : t("Hmm, olmadı 🙀", "Hmm, not quite 🙀")}</p>
+                <p className="font-display text-lg font-bold">{correct ? t("Doğru! 🎉", "Correct! 🎉", "Richtig! 🎉") : t("Hmm, olmadı 🙀", "Hmm, not quite 🙀", "Hmm, nicht ganz 🙀")}</p>
                 <p>{q.explain}</p>
               </div>
               <button type="button" className="btn ml-auto whitespace-nowrap bg-lemon-deep" onClick={next}>
-                {i < questions.length - 1 ? t("Sonraki →", "Next →") : t("Sonuç 🏁", "Results 🏁")}
+                {i < questions.length - 1 ? t("Sonraki →", "Next →", "Nächste →") : t("Sonuç 🏁", "Results 🏁", "Ergebnis 🏁")}
               </button>
             </motion.div>
           )}

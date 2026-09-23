@@ -45,7 +45,7 @@ export default function TopicShell({ title, subtitle, emoji, color, stages, spla
     <main className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-4 px-4 py-4 md:py-6">
       <header className="flex items-center justify-between gap-2 sm:gap-3">
         <Link href="/" className="btn shrink-0 bg-white !px-3 sm:!px-4" onClick={() => play("click")}>
-          ← <span className="hidden sm:inline">{t("Ana Sayfa", "Home")}</span>
+          ← <span className="hidden sm:inline">{t("Ana Sayfa", "Home", "Startseite")}</span>
         </Link>
         <div className={`card flex min-w-0 items-center gap-2 px-3 py-2 sm:px-4 ${color}`}>
           <span className="hidden text-2xl sm:inline">{emoji}</span>

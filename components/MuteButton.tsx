@@ -6,7 +6,7 @@ import { useLang } from "@/lib/i18n";
 export default function MuteButton() {
   const { muted, toggleMute, play } = useSound();
   const { t } = useLang();
-  const label = muted ? t("Sesi aç", "Unmute") : t("Sesi kapat", "Mute");
+  const label = muted ? t("Sesi aç", "Unmute", "Ton an") : t("Sesi kapat", "Mute", "Ton aus");
   return (
     <button
       type="button"

@@ -7,15 +7,16 @@ import { useSound } from "@/lib/sound";
 const OPTIONS: { value: Lang; label: string; flag: string }[] = [
   { value: "tr", label: "TR", flag: "🇹🇷" },
   { value: "en", label: "EN", flag: "🇬🇧" },
+  { value: "de", label: "DE", flag: "🇩🇪" },
 ];
 
-/** Pill toggle between Türkçe and English. */
+/** Pill toggle between Türkçe, English and Deutsch. */
 export default function LangSwitch() {
   const { lang, setLang, t } = useLang();
   const { play } = useSound();
 
   return (
-    <div role="radiogroup" aria-label={t("Dil", "Language")} className="relative flex rounded-full border-3 border-ink bg-white p-1 shadow-[var(--shadow-pop)]">
+    <div role="radiogroup" aria-label={t("Dil", "Language", "Sprache")} className="relative flex rounded-full border-3 border-ink bg-white p-1 shadow-[var(--shadow-pop)]">
       {OPTIONS.map((o) => {
         const active = lang === o.value;
         return (

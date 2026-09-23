@@ -118,11 +118,11 @@ export default function Dialogue({ speakers, lines, onDone, doneLabel }: Props) 
         <div className="flex gap-2">
           {i > 0 && (
             <button type="button" className="btn whitespace-nowrap bg-white" onClick={() => (play("click"), setI(i - 1))}>
-              ← {t("Geri", "Back")}
+              ← {t("Geri", "Back", "Zurück")}
             </button>
           )}
           <button type="button" className="btn whitespace-nowrap bg-lemon-deep" onClick={next}>
-            {i < lines.length - 1 ? t("Devam →", "Next →") : (doneLabel ?? t("Hadi oynayalım! 🎮", "Let's play! 🎮"))}
+            {i < lines.length - 1 ? t("Devam →", "Next →", "Weiter →") : (doneLabel ?? t("Hadi oynayalım! 🎮", "Let's play! 🎮", "Los, spielen wir! 🎮"))}
           </button>
         </div>
       </div>

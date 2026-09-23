@@ -50,7 +50,7 @@ export default function Splash({ title, tagline, children, onStart, color = "bg-
         animate={{ scale: [1, 1.07, 1] }}
         transition={{ duration: 1.4, repeat: Infinity }}
       >
-        {startLabel ?? t("Başla! 🚀", "Start! 🚀")}
+        {startLabel ?? t("Başla! 🚀", "Start! 🚀", "Los geht's! 🚀")}
       </motion.button>
     </motion.div>
   );

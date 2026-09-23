@@ -47,14 +47,16 @@ export default function Home() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", bounce: 0.55 }}
         >
-          {t("Kimya", "Chemistry")} <span className="text-pink-deep">{t("Kedileri", "Cats")}</span>
+          {t("Kimya", "Chemistry", "Chemie")}{" "}
+          <span className="text-pink-deep">{t("Kedileri", "Cats", "Katzen")}</span>
         </motion.h1>
         <p className="max-w-2xl text-lg md:text-xl">
-          {t("Kediler ve laboratuvar asistanı ", "Learn chemistry by playing with cats and lab assistant ")}
+          {t("Kediler ve laboratuvar asistanı ", "Learn chemistry by playing with cats and lab assistant ", "Lerne Chemie spielerisch mit Katzen und Laborassistent ")}
           <b>Robo</b>
           {t(
             " ile kimyayı oynayarak öğren! Bir konu seç, hikâyeyi dinle, oyunu oyna, quiz'i geç. 🐾",
             "! Pick a topic, listen to the story, play the game, ace the quiz. 🐾",
+            "! Wähle ein Thema, hör dir die Geschichte an, spiel das Spiel und meistere das Quiz. 🐾",
           )}
         </p>
       </section>
@@ -87,7 +89,7 @@ export default function Home() {
         ))}
       </section>
 
-      <footer className="relative pb-4 text-center text-sm text-ink-soft">{t("Lise öğrencileri için sevgiyle yapıldı 💜 · Sesli deneyim için 🔊", "Made with love for high school students 💜 · Best with sound 🔊")}</footer>
+      <footer className="relative pb-4 text-center text-sm text-ink-soft">{t("Lise öğrencileri için sevgiyle yapıldı 💜 · Sesli deneyim için 🔊", "Made with love for high school students 💜 · Best with sound 🔊", "Mit Liebe für Schüler*innen der Oberstufe gemacht 💜 · Am besten mit Ton 🔊")}</footer>
     </main>
   );
 }
