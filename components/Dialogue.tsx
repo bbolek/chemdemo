@@ -115,11 +115,11 @@ export default function Dialogue({ speakers, lines, onDone, doneLabel = "Hadi oy
         </div>
         <div className="flex gap-2">
           {i > 0 && (
-            <button type="button" className="btn bg-white" onClick={() => (play("click"), setI(i - 1))}>
+            <button type="button" className="btn whitespace-nowrap bg-white" onClick={() => (play("click"), setI(i - 1))}>
               ← Geri
             </button>
           )}
-          <button type="button" className="btn bg-lemon-deep" onClick={next}>
+          <button type="button" className="btn whitespace-nowrap bg-lemon-deep" onClick={next}>
             {i < lines.length - 1 ? "Devam →" : doneLabel}
           </button>
         </div>
