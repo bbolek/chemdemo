@@ -34,9 +34,9 @@ export function PhScale({ marker, labels = true, compact = false }: { marker?: n
             ))}
           </div>
           <div className="mt-0.5 flex justify-between font-display text-xs font-bold sm:text-sm">
-            <span className="text-[#e0485f]">◀ {t("asidik", "acidic")}</span>
-            <span className="text-[#3f9e4d]">{t("nötr", "neutral")}</span>
-            <span className="text-[#7a4fd0]">{t("bazik", "basic")} ▶</span>
+            <span className="text-[#e0485f]">◀ {t("asidik", "acidic", "sauer")}</span>
+            <span className="text-[#3f9e4d]">{t("nötr", "neutral", "neutral")}</span>
+            <span className="text-[#7a4fd0]">{t("bazik", "basic", "basisch")} ▶</span>
           </div>
         </>
       )}

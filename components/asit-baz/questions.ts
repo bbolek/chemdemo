@@ -1,7 +1,7 @@
 import type { QuizQuestion } from "@/components/Quiz";
 import type { Localized } from "@/lib/i18n";
 
-/** Same order, same answer indexes in both languages. */
+/** Same order, same answer indexes in all languages. */
 export const QUESTIONS: Localized<QuizQuestion[]> = {
   tr: [
     {
@@ -125,6 +125,68 @@ export const QUESTIONS: Localized<QuizQuestion[]> = {
       options: ["Lemon juice", "Vinegar", "Baking soda (mildly basic)", "Cola"],
       answer: 2,
       explain: "Excess stomach acid is reduced by neutralizing it with mildly basic baking soda (NaHCO₃).",
+    },
+  ],
+  de: [
+    {
+      q: "Was ist eine Säure nach der Definition von Arrhenius?",
+      options: ["Ein Stoff, der in Wasser OH⁻-Ionen abgibt", "Ein Stoff, der in Wasser H⁺-Ionen abgibt", "Ein Stoff, der süß schmeckt", "Ein Stoff, der sich gar nicht in Wasser löst"],
+      answer: 1,
+      explain: "Säuren geben in Wasser H⁺-Ionen ab. Zum Beispiel: HCl → H⁺ + Cl⁻.",
+    },
+    {
+      q: "Chlorbleiche hat einen pH-Wert von 12,5. Welche Aussage stimmt?",
+      options: ["Sie ist stark sauer", "Sie ist neutral", "Sie ist basisch (alkalisch)", "Ihr pH-Wert ist nicht messbar"],
+      answer: 2,
+      explain: "Bei pH > 7 ist eine Lösung basisch. 12,5 ist ziemlich hoch, also stark alkalisch und ätzend.",
+    },
+    {
+      q: "Wie viel Mal saurer ist eine Lösung mit pH 3 als eine mit pH 5?",
+      options: ["2-mal", "10-mal", "20-mal", "100-mal"],
+      answer: 3,
+      explain: "Jede pH-Stufe bedeutet einen Faktor 10. Zwei Stufen Unterschied: 10 × 10 = 100-mal.",
+    },
+    {
+      q: "Was passiert, wenn du blaues Lackmuspapier in Zitronensaft tauchst?",
+      options: ["Es wird rot", "Es bleibt blau", "Es wird grün", "Es wird weiß"],
+      answer: 0,
+      explain: "Säuren färben blaues Lackmuspapier rot. Basen färben rotes Lackmuspapier blau.",
+    },
+    {
+      q: "Was gehört in die Lücke? HCl + NaOH → ? + H₂O",
+      options: ["Cl₂", "NaCl", "NaH", "O₂"],
+      answer: 1,
+      explain: "Säure + Base → Salz + Wasser. Das entstehende Salz ist Natriumchlorid, also Kochsalz (NaCl).",
+    },
+    {
+      q: "Welchen pH-Wert hat reines Wasser bei 25 °C?",
+      options: ["0", "5", "7", "14"],
+      answer: 2,
+      explain: "In reinem Wasser sind die Konzentrationen von H⁺ und OH⁻ gleich groß, also pH = 7: neutral.",
+    },
+    {
+      q: "Wie findest du im Labor heraus, ob eine unbekannte Flüssigkeit eine Säure oder eine Base ist?",
+      options: ["Ein bisschen probieren", "Kräftig dran schnuppern", "Mit dem Finger antippen", "Einen Indikator oder ein pH-Meter benutzen"],
+      answer: 3,
+      explain: "Im Labor wird nie etwas probiert, beschnuppert oder angefasst. Beweise liefern Indikator oder pH-Meter!",
+    },
+    {
+      q: "Ein paar Tropfen Universalindikator färben eine Lösung violett. Was ist es am ehesten?",
+      options: ["Essig", "Rohrreiniger", "Reines Wasser", "Cola"],
+      answer: 1,
+      explain: "Violett beim Universalindikator bedeutet stark basisch. Genau das bewirkt das NaOH im Rohrreiniger.",
+    },
+    {
+      q: "Wie viel mL NaOH (0,1 mol/L) brauchst du, um 25 mL HCl (0,1 mol/L) genau zu neutralisieren?",
+      options: ["12,5 mL", "25 mL", "50 mL", "0,1 mL"],
+      answer: 1,
+      explain: "n(H⁺) = 0,1 × 25 = 2,5 mmol. Für die gleiche Stoffmenge OH⁻ braucht man 2,5 ÷ 0,1 = 25 mL NaOH.",
+    },
+    {
+      q: "Was kann jemandem mit Sodbrennen Erleichterung verschaffen?",
+      options: ["Zitronensaft", "Essig", "Natron (schwach basisch)", "Cola"],
+      answer: 2,
+      explain: "Überschüssige Magensäure wird mit schwach basischem Natron (NaHCO₃) neutralisiert und so verringert.",
     },
   ],
 };
