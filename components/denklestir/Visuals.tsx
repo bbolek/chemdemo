@@ -94,18 +94,22 @@ export function IndexVisual() {
       <div className="flex flex-col items-center gap-1 rounded-2xl bg-mint p-3" style={{ border: `2px solid ${INK}` }}>
         <Molecule formula="H2O" unit={20} />
         <span className="font-display text-xl font-bold">H₂O</span>
-        <span className="text-sm">{t("Su", "Water")} 💧</span>
+        <span className="text-sm">{t("Su", "Water", "Wasser")} 💧</span>
       </div>
       <div className="relative flex flex-col items-center gap-1 rounded-2xl bg-pink p-3" style={{ border: `2px solid ${INK}` }}>
         <Molecule formula="H2O2" unit={20} />
         <span className="font-display text-xl font-bold">H₂O₂</span>
-        <span className="text-center text-sm">{t("Hidrojen peroksit", "Hydrogen peroxide")} 🧴</span>
+        <span className="text-center text-sm">{t("Hidrojen peroksit", "Hydrogen peroxide", "Wasserstoff\u00ADperoxid")} 🧴</span>
         <motion.span initial={{ scale: 3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3 }} className="absolute -right-2 -top-3 text-4xl">
           🚫
         </motion.span>
       </div>
       <p className="col-span-2 text-center text-sm">
-        {lang === "en" ? (
+        {lang === "de" ? (
+          <>
+            Kleine Zahl = <b>Index</b> (die Identität des Stoffs, Finger weg!) · Große Zahl = <b>Koeffizient</b> (wie viele Moleküle)
+          </>
+        ) : lang === "en" ? (
           <>
             Small number = <b>subscript</b> (the substance&apos;s identity, don&apos;t touch!) · Big number = <b>coefficient</b> (how many molecules)
           </>
@@ -142,10 +146,10 @@ export function CoefVisual() {
 export function StepsVisual() {
   const { t } = useLang();
   const steps = [
-    ["🧩", t("En karmaşık (en çok atomlu) molekülden başla.", "Start with the most complex molecule (the one with the most atoms).")],
-    ["⚙️", t("Metalleri ve diğer atomları eşitle.", "Balance the metals and other atoms.")],
-    ["💧", t("H ve O atomlarını sona bırak.", "Leave H and O atoms until last.")],
-    ["✂️", t("Katsayıları en küçük tam sayılara sadeleştir.", "Simplify to the smallest whole-number coefficients.")],
+    ["🧩", t("En karmaşık (en çok atomlu) molekülden başla.", "Start with the most complex molecule (the one with the most atoms).", "Fang mit dem kompliziertesten Molekül (mit den meisten Atomen) an.")],
+    ["⚙️", t("Metalleri ve diğer atomları eşitle.", "Balance the metals and other atoms.", "Gleiche die Metalle und die übrigen Atome aus.")],
+    ["💧", t("H ve O atomlarını sona bırak.", "Leave H and O atoms until last.", "Heb dir H- und O-Atome für den Schluss auf.")],
+    ["✂️", t("Katsayıları en küçük tam sayılara sadeleştir.", "Simplify to the smallest whole-number coefficients.", "Kürze auf die kleinsten ganzzahligen Koeffizienten.")],
   ];
   return (
     <ol className="grid gap-2 sm:grid-cols-2">

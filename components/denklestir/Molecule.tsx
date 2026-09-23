@@ -19,17 +19,17 @@ export const ELEMENT_COLORS: Record<string, [string, string]> = {
 };
 
 export const ELEMENT_NAMES: Record<string, Localized<string>> = {
-  H: { tr: "Hidrojen", en: "Hydrogen" },
-  O: { tr: "Oksijen", en: "Oxygen" },
-  N: { tr: "Azot", en: "Nitrogen" },
-  C: { tr: "Karbon", en: "Carbon" },
-  Na: { tr: "Sodyum", en: "Sodium" },
-  K: { tr: "Potasyum", en: "Potassium" },
-  Cl: { tr: "Klor", en: "Chlorine" },
-  Mg: { tr: "Magnezyum", en: "Magnesium" },
-  Al: { tr: "Alüminyum", en: "Aluminium" },
-  Fe: { tr: "Demir", en: "Iron" },
-  Ca: { tr: "Kalsiyum", en: "Calcium" },
+  H: { tr: "Hidrojen", en: "Hydrogen", de: "Wasserstoff" },
+  O: { tr: "Oksijen", en: "Oxygen", de: "Sauerstoff" },
+  N: { tr: "Azot", en: "Nitrogen", de: "Stickstoff" },
+  C: { tr: "Karbon", en: "Carbon", de: "Kohlenstoff" },
+  Na: { tr: "Sodyum", en: "Sodium", de: "Natrium" },
+  K: { tr: "Potasyum", en: "Potassium", de: "Kalium" },
+  Cl: { tr: "Klor", en: "Chlorine", de: "Chlor" },
+  Mg: { tr: "Magnezyum", en: "Magnesium", de: "Magnesium" },
+  Al: { tr: "Alüminyum", en: "Aluminium", de: "Aluminium" },
+  Fe: { tr: "Demir", en: "Iron", de: "Eisen" },
+  Ca: { tr: "Kalsiyum", en: "Calcium", de: "Calcium" },
 };
 
 const RADIUS: Record<string, number> = { H: 0.62, O: 0.95, N: 0.95, C: 0.95, Cl: 1.1, Na: 1.2, K: 1.3, Mg: 1.1, Al: 1.1, Fe: 1.15, Ca: 1.25 };
