@@ -107,8 +107,8 @@ export default function Dialogue({ speakers, lines, onDone, doneLabel = "Hadi oy
         </motion.button>
       </AnimatePresence>
 
-      <div className="flex items-center justify-between">
-        <div className="flex gap-1.5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {lines.map((_, k) => (
             <span key={k} className={`h-2.5 rounded-full transition-all ${k === i ? "w-6 bg-ink" : k < i ? "w-2.5 bg-ink-soft" : "w-2.5 bg-ink/20"}`} />
           ))}
