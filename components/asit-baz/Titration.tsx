@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Cat from "@/components/Cat";
 import Robo from "@/components/Robo";
 import { useSound } from "@/lib/sound";
+import { useLang } from "@/lib/i18n";
 import { celebrate } from "@/lib/confetti";
 import { Beaker, PhMeter } from "./Props";
 import { MIRMIR } from "./Story";
@@ -19,10 +20,10 @@ const BURETTE_ML = 50;
 type Status = "run" | "win" | "over";
 
 const vol = (u: number) => u * DROP_ML;
-const fmt = (n: number, d = 2) => n.toFixed(d).replace(".", ",");
 
 /** Live pH vs added NaOH volume graph. */
 function Graph({ pts, status }: { pts: [number, number][]; status: Status }) {
+  const { t } = useLang();
   const W = 300;
   const H = 180;
   const pad = { l: 30, r: 10, t: 10, b: 26 };
@@ -31,7 +32,7 @@ function Graph({ pts, status }: { pts: [number, number][]; status: Status }) {
   const d = pts.map(([v, p], i) => `${i ? "L" : "M"}${X(v).toFixed(1)} ${Y(p).toFixed(1)}`).join(" ");
   const last = pts[pts.length - 1];
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="pH - eklenen NaOH hacmi grafiği">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={t("pH - eklenen NaOH hacmi grafiği", "Graph of pH vs volume of NaOH added")}>
       <rect x={pad.l} y={Y(7.5)} width={W - pad.l - pad.r} height={Y(6.5) - Y(7.5)} fill="#7fdcb8" opacity="0.45" />
       {[0, 7, 14].map((p) => (
         <g key={p}>
@@ -63,6 +64,7 @@ function Graph({ pts, status }: { pts: [number, number][]; status: Status }) {
 
 /** Burette on a stand. `frac` = fraction of the 50 mL still inside. */
 function Burette({ frac, open }: { frac: number; open: boolean }) {
+  const { num } = useLang();
   const top = 10;
   const bot = 200;
   const liqTop = top + (1 - frac) * (bot - top);
@@ -81,7 +83,7 @@ function Burette({ frac, open }: { frac: number; open: boolean }) {
         NaOH
       </text>
       <text x="74" y="44" fontSize="10" fontWeight="700" fill={INK} opacity="0.7">
-        0,1 M
+        {num(BASE_M, 1)} M
       </text>
       {/* stopcock */}
       <path d={`M54 ${bot} L66 ${bot} L62 ${bot + 14} L58 ${bot + 14} Z`} fill="#fff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
@@ -95,6 +97,8 @@ function Burette({ frac, open }: { frac: number; open: boolean }) {
 
 export default function Titration({ onNext }: { onNext: () => void }) {
   const { play } = useSound();
+  const { t, num } = useLang();
+  const fmt = (n: number, d = 2) => num(n, d);
   const [units, setUnits] = useState(0);
   const [pts, setPts] = useState<[number, number][]>([[0, titrationPH(0)]]);
   const [status, setStatus] = useState<Status>("run");
@@ -193,16 +197,16 @@ export default function Titration({ onNext }: { onNext: () => void }) {
 
   const hint =
     status === "win"
-      ? "Tam isabet! Asit ve baz birbirini nötrleştirdi. 🎉"
+      ? t("Tam isabet! Asit ve baz birbirini nötrleştirdi. 🎉", "Bullseye! The acid and base neutralized each other. 🎉")
       : status === "over"
-        ? "Eyvah! Fazla baz ekledik, çözelti bazik oldu! 🙀"
+        ? t("Eyvah! Fazla baz ekledik, çözelti bazik oldu! 🙀", "Uh-oh! We added too much base, the solution turned basic! 🙀")
         : v < 15
-          ? "Başla ortak! Musluğu basılı tut, NaOH akıtalım."
+          ? t("Başla ortak! Musluğu basılı tut, NaOH akıtalım.", "Go, partner! Hold down the tap to let the NaOH flow.")
           : v < 22
-            ? "Renk hâlâ kırmızımsı... ama sakın gevşeme!"
+            ? t("Renk hâlâ kırmızımsı... ama sakın gevşeme!", "Still reddish... but don't relax yet!")
             : v < 24.5
-              ? "Yavaşla! Artık tek damla tek damla! 💧"
-              : "Çok yakınız! Bir damla bile her şeyi değiştirir!";
+              ? t("Yavaşla! Artık tek damla tek damla! 💧", "Slow down! One drop at a time now! 💧")
+              : t("Çok yakınız! Bir damla bile her şeyi değiştirir!", "So close! Even a single drop changes everything!");
 
   const controls = (compact: boolean) => (
     <div className="grid grid-cols-2 gap-2">
@@ -215,14 +219,14 @@ export default function Titration({ onNext }: { onNext: () => void }) {
         onPointerCancel={stopHold}
         onContextMenu={(e) => e.preventDefault()}
       >
-        🚰 Basılı tut
+        {t("🚰 Basılı tut", "🚰 Hold to pour")}
       </button>
       <button type="button" className={`btn bg-mint ${compact ? "!px-2 !py-3" : "!py-4"}`} onClick={() => add(1)}>
-        💧 Tek damla
+        {t("💧 Tek damla", "💧 One drop")}
       </button>
       {!compact && (
         <p className="col-span-2 text-center text-sm text-ink-soft">
-          Basılı tuttukça akış hızlanır. Bir damla = {fmt(DROP_ML)} mL
+          {t("Basılı tuttukça akış hızlanır. Bir damla", "The longer you hold, the faster it flows. One drop")} = {fmt(DROP_ML)} mL
         </p>
       )}
     </div>
@@ -231,9 +235,12 @@ export default function Titration({ onNext }: { onNext: () => void }) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div className="card flex flex-wrap items-center justify-between gap-2 bg-lavender px-4 py-3">
-        <h2 className="text-xl font-bold md:text-2xl">⚗️ Titrasyon Görevi</h2>
+        <h2 className="text-xl font-bold md:text-2xl">{t("⚗️ Titrasyon Görevi", "⚗️ Titration Mission")}</h2>
         <p className="text-sm font-semibold sm:text-base">
-          {ACID_ML} mL {fmt(ACID_M, 1)} M HCl + {fmt(BASE_M, 1)} M NaOH → hedef: <b className="whitespace-nowrap">pH 6,5 – 7,5</b>
+          {ACID_ML} mL {fmt(ACID_M, 1)} M HCl + {fmt(BASE_M, 1)} M NaOH → {t("hedef", "target")}:{" "}
+          <b className="whitespace-nowrap">
+            pH {fmt(6.5, 1)} – {fmt(7.5, 1)}
+          </b>
         </p>
       </div>
 
@@ -305,7 +312,7 @@ export default function Titration({ onNext }: { onNext: () => void }) {
             />
             <p className="flex-1 rounded-2xl border-2 border-ink bg-white px-2 py-1 text-sm font-bold">{hint}</p>
             {status !== "run" && (
-              <button type="button" className="btn bg-white !px-3 !py-1.5 !text-sm" onClick={reset} aria-label="Tekrar dene">
+              <button type="button" className="btn bg-white !px-3 !py-1.5 !text-sm" onClick={reset} aria-label={t("Tekrar dene", "Try again")}>
                 🔁
               </button>
             )}
@@ -318,7 +325,7 @@ export default function Titration({ onNext }: { onNext: () => void }) {
             <PhMeter ph={ph} size={140} />
             <div className="flex flex-col gap-1.5 font-display font-bold">
               <div className="rounded-2xl border-2 border-ink bg-sky px-3 py-1">
-                Eklenen NaOH: <span className="text-xl">{fmt(v)} mL</span>
+                {t("Eklenen NaOH", "NaOH added")}: <span className="text-xl">{fmt(v)} mL</span>
               </div>
               <div className="rounded-2xl border-2 border-ink px-3 py-1" style={{ background: phColor(ph) }}>
                 pH: <span className="text-xl">{fmt(ph)}</span>
@@ -336,26 +343,37 @@ export default function Titration({ onNext }: { onNext: () => void }) {
             >
               {status === "win" ? (
                 <>
-                  <p className="font-display text-xl font-bold">Nötrleşme tamam! pH = {fmt(ph)} 🎉</p>
+                  <p className="font-display text-xl font-bold">
+                    {t("Nötrleşme tamam!", "Neutralization complete!")} pH = {fmt(ph)} 🎉
+                  </p>
                   <p className="mt-1">
-                    HCl + NaOH → NaCl + H₂O. {fmt(ACID_M * ACID_ML, 1)} mmol H⁺, tam {fmt(v)} mL NaOH&apos;deki {fmt(BASE_M * v, 1)} mmol OH⁻ ile su oluşturdu. Beherde artık tuzlu su var!
+                    HCl + NaOH → NaCl + H₂O.{" "}
+                    {t(
+                      `${fmt(ACID_M * ACID_ML, 1)} mmol H⁺, tam ${fmt(v)} mL NaOH'deki ${fmt(BASE_M * v, 1)} mmol OH⁻ ile su oluşturdu. Beherde artık tuzlu su var!`,
+                      `${fmt(ACID_M * ACID_ML, 1)} mmol of H⁺ combined with the ${fmt(BASE_M * v, 1)} mmol of OH⁻ in exactly ${fmt(v)} mL of NaOH to make water. The beaker now holds salty water!`,
+                    )}
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="font-display text-xl font-bold">Fazla baz! pH = {fmt(ph)} 💜</p>
+                  <p className="font-display text-xl font-bold">
+                    {t("Fazla baz!", "Too much base!")} pH = {fmt(ph)} 💜
+                  </p>
                   <p className="mt-1">
-                    Dönüm noktasına yakın tek bir damla pH&apos;ı birkaç birim zıplatır. İndikatörün rengi {ph < 11 ? "maviye" : "mora"} döndü. Fenolftalein kullansaydık çözelti pembe olurdu!
+                    {t(
+                      `Dönüm noktasına yakın tek bir damla pH'ı birkaç birim zıplatır. İndikatörün rengi ${ph < 11 ? "maviye" : "mora"} döndü. Fenolftalein kullansaydık çözelti pembe olurdu!`,
+                      `Near the equivalence point, a single drop makes the pH jump by several units. The indicator turned ${ph < 11 ? "blue" : "purple"}. With phenolphthalein, the solution would have turned pink!`,
+                    )}
                   </p>
                 </>
               )}
               <div className="mt-3 flex flex-wrap justify-end gap-2">
                 <button type="button" className="btn bg-white" onClick={reset}>
-                  {status === "win" ? "Yeniden 🔁" : "Tekrar dene 🔁"}
+                  {status === "win" ? t("Yeniden 🔁", "Again 🔁") : t("Tekrar dene 🔁", "Try again 🔁")}
                 </button>
                 {status === "win" && (
                   <button type="button" className="btn bg-lemon-deep" onClick={onNext}>
-                    Quiz&apos;e geç ❓
+                    {t("Quiz'e geç ❓", "On to the quiz ❓")}
                   </button>
                 )}
               </div>
@@ -363,19 +381,21 @@ export default function Titration({ onNext }: { onNext: () => void }) {
           )}
 
           <div className="rounded-2xl border-2 border-ink/20 bg-cream p-2">
-            <p className="px-1 font-display text-sm font-bold text-ink-soft">📈 pH – NaOH hacmi grafiği</p>
+            <p className="px-1 font-display text-sm font-bold text-ink-soft">{t("📈 pH – NaOH hacmi grafiği", "📈 pH vs NaOH volume graph")}</p>
             <Graph pts={pts} status={status} />
           </div>
 
           <details className="rounded-2xl border-2 border-dashed border-ink/30 px-3 py-2 text-sm">
-            <summary className="cursor-pointer font-display font-bold">🕵️ Mırmır&apos;ın ipucu (hesapla!)</summary>
+            <summary className="cursor-pointer font-display font-bold">{t("🕵️ Mırmır'ın ipucu (hesapla!)", "🕵️ Purr's hint (do the maths!)")}</summary>
             <p className="mt-1">
-              n(HCl) = M × V = 0,1 × 25 = 2,5 mmol H⁺. Nötrleşme için aynı mol OH⁻ gerekir: 2,5 mmol ÷ 0,1 M = <b>? mL</b> NaOH. Bu hacme yaklaşınca yavaşla!
+              n(HCl) = M × V = {fmt(ACID_M, 1)} × {ACID_ML} = {fmt(ACID_M * ACID_ML, 1)} mmol H⁺.{" "}
+              {t("Nötrleşme için aynı mol OH⁻ gerekir", "Neutralization needs the same number of moles of OH⁻")}: {fmt(ACID_M * ACID_ML, 1)} mmol ÷{" "}
+              {fmt(BASE_M, 1)} M = <b>? mL</b> NaOH. {t("Bu hacme yaklaşınca yavaşla!", "Slow down as you get close to that volume!")}
             </p>
           </details>
           {wins > 0 && status === "run" && (
             <button type="button" className="btn self-end bg-lemon-deep" onClick={onNext}>
-              Quiz&apos;e geç ❓
+              {t("Quiz'e geç ❓", "On to the quiz ❓")}
             </button>
           )}
         </div>

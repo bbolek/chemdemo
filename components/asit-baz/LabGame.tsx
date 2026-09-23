@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Cat from "@/components/Cat";
 import Robo from "@/components/Robo";
 import { useSound } from "@/lib/sound";
+import { useLang, type Localized } from "@/lib/i18n";
 import { celebrate, sparkleAt } from "@/lib/confetti";
 import { Beaker, Litmus, PhMeter, PhScale } from "./Props";
 import { MIRMIR } from "./Story";
@@ -12,32 +13,114 @@ import { kindOf, phColor, type Kind } from "./ph";
 
 interface Item {
   id: string;
-  name: string;
+  name: Localized<string>;
   emoji: string;
   ph: number;
-  fact: string;
+  fact: Localized<string>;
 }
 
 const ITEMS: Item[] = [
-  { id: "limon", name: "Limon suyu", emoji: "🍋", ph: 2, fact: "Limonda sitrik asit vardır. Ekşi tat, asitlerin tipik özelliğidir." },
-  { id: "kola", name: "Kola", emoji: "🥤", ph: 2.5, fact: "Kolada fosforik asit ve karbonik asit bulunur. Diş minesine zarar verebilir!" },
-  { id: "sirke", name: "Sirke", emoji: "🍶", ph: 3, fact: "Sirkenin ekşiliği asetik asitten (CH₃COOH) gelir." },
-  { id: "kahve", name: "Kahve", emoji: "☕", ph: 5, fact: "Kahve hafif asidiktir. Limondan yaklaşık 1000 kat daha az asidik!" },
-  { id: "sut", name: "Süt", emoji: "🥛", ph: 6.5, fact: "Süt çok hafif asidiktir. Bekledikçe laktik asit artar, pH düşer ve süt ekşir." },
-  { id: "su", name: "Saf su", emoji: "💧", ph: 7, fact: "Saf suda H⁺ ve OH⁻ derişimleri eşittir, bu yüzden tam nötrdür." },
-  { id: "yumurta", name: "Yumurta akı", emoji: "🥚", ph: 8, fact: "Yumurta akı hafif baziktir. Yumurta bayatladıkça pH'ı yükselir." },
-  { id: "karbonat", name: "Karbonat", emoji: "🧂", ph: 8.5, fact: "Karbonat (NaHCO₃) hafif baziktir. Mide ekşimesinde fazla asidi nötrleştirir." },
-  { id: "sabun", name: "Sabunlu su", emoji: "🧼", ph: 10, fact: "Sabun baziktir. Elde bıraktığı kayganlık hissi bazların tipik özelliğidir." },
-  { id: "camasir", name: "Çamaşır suyu", emoji: "🧴", ph: 12.5, fact: "Çamaşır suyu kuvvetli baziktir. Asla tuz ruhu gibi asitli temizleyicilerle karıştırma: zehirli klor gazı çıkar!" },
-  { id: "lavabo", name: "Lavabo açıcı", emoji: "🪠", ph: 14, fact: "Lavabo açıcılarda NaOH bulunur, pH'ı 14'e yaklaşır. Çok yakıcıdır: eldiven ve gözlük şart!" },
-  { id: "domates", name: "Domates suyu", emoji: "🍅", ph: 4.5, fact: "Domates hafif asidiktir. Sitrik ve malik asit içerir." },
+  {
+    id: "limon",
+    name: { tr: "Limon suyu", en: "Lemon juice" },
+    emoji: "🍋",
+    ph: 2,
+    fact: { tr: "Limonda sitrik asit vardır. Ekşi tat, asitlerin tipik özelliğidir.", en: "Lemons contain citric acid. A sour taste is a classic property of acids." },
+  },
+  {
+    id: "kola",
+    name: { tr: "Kola", en: "Cola" },
+    emoji: "🥤",
+    ph: 2.5,
+    fact: { tr: "Kolada fosforik asit ve karbonik asit bulunur. Diş minesine zarar verebilir!", en: "Cola contains phosphoric acid and carbonic acid. It can damage tooth enamel!" },
+  },
+  {
+    id: "sirke",
+    name: { tr: "Sirke", en: "Vinegar" },
+    emoji: "🍶",
+    ph: 3,
+    fact: { tr: "Sirkenin ekşiliği asetik asitten (CH₃COOH) gelir.", en: "Vinegar gets its sourness from acetic acid (CH₃COOH)." },
+  },
+  {
+    id: "kahve",
+    name: { tr: "Kahve", en: "Coffee" },
+    emoji: "☕",
+    ph: 5,
+    fact: { tr: "Kahve hafif asidiktir. Limondan yaklaşık 1000 kat daha az asidik!", en: "Coffee is weakly acidic. About 1000 times less acidic than lemon juice!" },
+  },
+  {
+    id: "sut",
+    name: { tr: "Süt", en: "Milk" },
+    emoji: "🥛",
+    ph: 6.5,
+    fact: {
+      tr: "Süt çok hafif asidiktir. Bekledikçe laktik asit artar, pH düşer ve süt ekşir.",
+      en: "Milk is very slightly acidic. As it sits, lactic acid builds up, the pH drops and the milk goes sour.",
+    },
+  },
+  {
+    id: "su",
+    name: { tr: "Saf su", en: "Pure water" },
+    emoji: "💧",
+    ph: 7,
+    fact: { tr: "Saf suda H⁺ ve OH⁻ derişimleri eşittir, bu yüzden tam nötrdür.", en: "In pure water the H⁺ and OH⁻ concentrations are equal, so it's perfectly neutral." },
+  },
+  {
+    id: "yumurta",
+    name: { tr: "Yumurta akı", en: "Egg white" },
+    emoji: "🥚",
+    ph: 8,
+    fact: { tr: "Yumurta akı hafif baziktir. Yumurta bayatladıkça pH'ı yükselir.", en: "Egg white is weakly basic. As an egg gets older, its pH rises." },
+  },
+  {
+    id: "karbonat",
+    name: { tr: "Karbonat", en: "Baking soda" },
+    emoji: "🧂",
+    ph: 8.5,
+    fact: { tr: "Karbonat (NaHCO₃) hafif baziktir. Mide ekşimesinde fazla asidi nötrleştirir.", en: "Baking soda (NaHCO₃) is weakly basic. It neutralizes excess acid during heartburn." },
+  },
+  {
+    id: "sabun",
+    name: { tr: "Sabunlu su", en: "Soapy water" },
+    emoji: "🧼",
+    ph: 10,
+    fact: { tr: "Sabun baziktir. Elde bıraktığı kayganlık hissi bazların tipik özelliğidir.", en: "Soap is basic. That slippery feeling on your hands is a classic property of bases." },
+  },
+  {
+    id: "camasir",
+    name: { tr: "Çamaşır suyu", en: "Bleach" },
+    emoji: "🧴",
+    ph: 12.5,
+    fact: {
+      tr: "Çamaşır suyu kuvvetli baziktir. Asla tuz ruhu gibi asitli temizleyicilerle karıştırma: zehirli klor gazı çıkar!",
+      en: "Bleach is strongly basic. Never mix it with acidic cleaners such as hydrochloric (muriatic) acid: toxic chlorine gas is released!",
+    },
+  },
+  {
+    id: "lavabo",
+    name: { tr: "Lavabo açıcı", en: "Drain cleaner" },
+    emoji: "🪠",
+    ph: 14,
+    fact: {
+      tr: "Lavabo açıcılarda NaOH bulunur, pH'ı 14'e yaklaşır. Çok yakıcıdır: eldiven ve gözlük şart!",
+      en: "Drain cleaners contain NaOH, with a pH close to 14. Very corrosive: gloves and goggles are a must!",
+    },
+  },
+  {
+    id: "domates",
+    name: { tr: "Domates suyu", en: "Tomato juice" },
+    emoji: "🍅",
+    ph: 4.5,
+    fact: { tr: "Domates hafif asidiktir. Sitrik ve malik asit içerir.", en: "Tomatoes are weakly acidic. They contain citric and malic acid." },
+  },
 ];
 
-const KINDS: { k: Kind; label: string; cls: string; emoji: string }[] = [
-  { k: "asidik", label: "Asidik", cls: "bg-pink-deep", emoji: "🍋" },
-  { k: "nötr", label: "Nötr", cls: "bg-mint-deep", emoji: "💧" },
-  { k: "bazik", label: "Bazik", cls: "bg-lavender-deep", emoji: "🧼" },
+const KINDS: { k: Kind; label: Localized<string>; cls: string; emoji: string }[] = [
+  { k: "asidik", label: { tr: "Asidik", en: "Acidic" }, cls: "bg-pink-deep", emoji: "🍋" },
+  { k: "nötr", label: { tr: "Nötr", en: "Neutral" }, cls: "bg-mint-deep", emoji: "💧" },
+  { k: "bazik", label: { tr: "Bazik", en: "Basic" }, cls: "bg-lavender-deep", emoji: "🧼" },
 ];
+const kindLabel = (k: Kind) => KINDS.find((x) => x.k === k)!.label;
 
 const START_PH = 7;
 
@@ -45,6 +128,7 @@ type Phase = "pick" | "guess" | "falling" | "result";
 
 export default function LabGame({ onNext }: { onNext: () => void }) {
   const { play } = useSound();
+  const { t, pick, num } = useLang();
   const [phase, setPhase] = useState<Phase>("pick");
   const [item, setItem] = useState<Item | null>(null);
   const [guess, setGuess] = useState<Kind | null>(null);
@@ -121,21 +205,23 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
   const stars = score >= 11 ? 3 : score >= 8 ? 2 : 1;
   const catMood = phase === "result" ? (correct ? "love" : "surprised") : phase === "guess" ? "thinking" : "happy";
   const bubbleText = finished
-    ? "Dosya kapandı! Sırada titrasyon var. ⚗️"
+    ? t("Dosya kapandı! Sırada titrasyon var. ⚗️", "Case closed! Titration is next. ⚗️")
     : phase === "pick"
-      ? "Bir şüpheli seç! Önce tahmin, sonra kanıt. 🔍"
+      ? t("Bir şüpheli seç! Önce tahmin, sonra kanıt. 🔍", "Pick a suspect! Predict first, then prove it. 🔍")
       : phase === "guess"
-        ? `${item?.name}: asidik mi, nötr mü, bazik mi?`
+        ? item
+          ? t(`${item.name.tr}: asidik mi, nötr mü, bazik mi?`, `${item.name.en}: acidic, neutral or basic?`)
+          : ""
         : phase === "falling"
-          ? "Ve... şlap! 💦"
+          ? t("Ve... şlap! 💦", "And... splash! 💦")
           : correct
-            ? "Doğru tahmin, ortak! 🎉"
-            : "Hmm, kanıtlar başka diyor! 🙀";
+            ? t("Doğru tahmin, ortak! 🎉", "Spot on, partner! 🎉")
+            : t("Hmm, kanıtlar başka diyor! 🙀", "Hmm, the evidence says otherwise! 🙀");
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div className="card flex flex-wrap items-center justify-between gap-2 bg-lemon px-4 py-3">
-        <h2 className="text-xl font-bold md:text-2xl">🧪 Mutfak Laboratuvarı</h2>
+        <h2 className="text-xl font-bold md:text-2xl">{t("🧪 Mutfak Laboratuvarı", "🧪 Kitchen Lab")}</h2>
         <div className="flex items-center gap-3 font-display font-bold">
           <span className="rounded-full border-2 border-ink bg-white px-3 py-0.5">
             🔍 {tested}/{ITEMS.length}
@@ -199,7 +285,7 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
                 )}
               </AnimatePresence>
               <div className="w-[170px] sm:w-[200px]">
-                <Beaker color={phColor(liquidPh)} level={0.55} width={200} splashKey={splashKey} label={ph === null ? "saf su" : `pH ${String(liquidPh).replace(".", ",")}`} />
+                <Beaker color={phColor(liquidPh)} level={0.55} width={200} splashKey={splashKey} label={ph === null ? t("saf su", "pure water") : `pH ${num(liquidPh)}`} />
               </div>
             </div>
 
@@ -214,7 +300,7 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
             </div>
             <div className="absolute bottom-28 right-6 flex flex-col items-center text-xs font-bold sm:right-10">
               <Litmus ph={phase === "result" ? ph : null} size={30} />
-              turnusol
+              {t("turnusol", "litmus")}
             </div>
           </div>
         </div>
@@ -224,7 +310,7 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
           <AnimatePresence mode="wait">
             {finished ? (
               <motion.div key="fin" initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-3 text-center">
-                <h3 className="text-2xl font-bold">Gizem çözüldü! 🕵️</h3>
+                <h3 className="text-2xl font-bold">{t("Gizem çözüldü! 🕵️", "Mystery solved! 🕵️")}</h3>
                 <div className="flex gap-1 text-5xl">
                   {[1, 2, 3].map((s) => (
                     <motion.span key={s} initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: s * 0.25, type: "spring" }}>
@@ -233,23 +319,25 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
                   ))}
                 </div>
                 <p className="text-lg">
-                  {ITEMS.length} şüpheliden <b>{score}</b> tanesini doğru tahmin ettin.
+                  {t(`${ITEMS.length} şüpheliden `, "You got ")}
+                  <b>{score}</b>
+                  {t(" tanesini doğru tahmin ettin.", ` out of ${ITEMS.length} suspects right.`)}
                 </p>
                 <div className="w-full">
                   <PhScale compact />
                 </div>
                 <div className="flex flex-wrap justify-center gap-2">
                   <button type="button" className="btn bg-white" onClick={reset}>
-                    Tekrar Oyna 🔁
+                    {t("Tekrar Oyna 🔁", "Play Again 🔁")}
                   </button>
                   <button type="button" className="btn bg-lemon-deep" onClick={onNext}>
-                    Titrasyona geç ⚗️
+                    {t("Titrasyona geç ⚗️", "On to titration ⚗️")}
                   </button>
                 </div>
               </motion.div>
             ) : phase === "pick" ? (
               <motion.div key="pick" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-3">
-                <p className="font-display text-lg font-bold">Hangi şüpheliyi test edelim?</p>
+                <p className="font-display text-lg font-bold">{t("Hangi şüpheliyi test edelim?", "Which suspect shall we test?")}</p>
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                   {ITEMS.map((it) => {
                     const r = results[it.id];
@@ -268,10 +356,10 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
                         style={done ? { background: phColor(it.ph) } : undefined}
                       >
                         <span className="text-3xl">{it.emoji}</span>
-                        {it.name}
+                        {pick(it.name)}
                         {done && (
                           <span className="absolute -right-1.5 -top-1.5 rounded-full border-2 border-ink bg-white px-1 text-[11px]">
-                            {r ? "✅" : "❌"} {it.ph}
+                            {r ? "✅" : "❌"} {num(it.ph)}
                           </span>
                         )}
                       </motion.button>
@@ -287,11 +375,11 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
                       {item.emoji}
                     </motion.span>
                     <div>
-                      <p className="text-sm font-bold text-ink-soft">Şüpheli</p>
-                      <p className="font-display text-2xl font-bold">{item.name}</p>
+                      <p className="text-sm font-bold text-ink-soft">{t("Şüpheli", "Suspect")}</p>
+                      <p className="font-display text-2xl font-bold">{pick(item.name)}</p>
                     </div>
                   </div>
-                  <p className="font-display text-lg font-bold">1) Tahminin ne?</p>
+                  <p className="font-display text-lg font-bold">{t("1) Tahminin ne?", "1) What's your prediction?")}</p>
                   <div className="grid grid-cols-3 gap-2">
                     {KINDS.map((k) => {
                       const picked = guess === k.k;
@@ -308,26 +396,32 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
                             isAnswer ? "ring-4 ring-mint-deep ring-offset-2" : ""
                           }`}
                         >
-                          {k.emoji} {k.label}
+                          {k.emoji} {pick(k.label)}
                         </motion.button>
                       );
                     })}
                   </div>
-                  {phase === "guess" && <p className="text-sm text-ink-soft">Tahmin ettiğin anda madde behere dökülecek! 💦</p>}
+                  {phase === "guess" && <p className="text-sm text-ink-soft">{t("Tahmin ettiğin anda madde behere dökülecek! 💦", "As soon as you guess, the sample gets poured into the beaker! 💦")}</p>}
                   {phase === "result" && (
                     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-3">
                       <div className={`rounded-2xl border-3 border-ink p-3 ${correct ? "bg-mint" : "bg-pink"}`}>
                         <p className="font-display text-xl font-bold">
-                          {correct ? "Doğru! 🎉" : "Olmadı! 🙀"} pH ≈ {item.ph} → {kindOf(item.ph).toUpperCase()}
+                          {correct ? t("Doğru! 🎉", "Correct! 🎉") : t("Olmadı! 🙀", "Not quite! 🙀")} pH ≈ {num(item.ph)} →{" "}
+                          {pick(kindLabel(kindOf(item.ph))).toLocaleUpperCase(t("tr-TR", "en-US"))}
                         </p>
-                        <p className="mt-1">{item.fact}</p>
+                        <p className="mt-1">{pick(item.fact)}</p>
                         <p className="mt-1 text-sm font-semibold text-ink-soft">
-                          Turnusol: {kindOf(item.ph) === "asidik" ? "kırmızı 🔴" : kindOf(item.ph) === "bazik" ? "mavi 🔵" : "renk değiştirmez 🟣"}
+                          {t("Turnusol", "Litmus")}:{" "}
+                          {kindOf(item.ph) === "asidik"
+                            ? t("kırmızı 🔴", "red 🔴")
+                            : kindOf(item.ph) === "bazik"
+                              ? t("mavi 🔵", "blue 🔵")
+                              : t("renk değiştirmez 🟣", "no colour change 🟣")}
                         </p>
                       </div>
                       <PhScale marker={item.ph} compact />
                       <button type="button" className="btn self-end bg-lemon-deep" onClick={nextRound}>
-                        {tested >= ITEMS.length ? "Sonucu gör 🏁" : "Beheri yıka, sıradaki! 🧽"}
+                        {tested >= ITEMS.length ? t("Sonucu gör 🏁", "See results 🏁") : t("Beheri yıka, sıradaki! 🧽", "Rinse the beaker, next! 🧽")}
                       </button>
                     </motion.div>
                   )}
@@ -339,10 +433,10 @@ export default function LabGame({ onNext }: { onNext: () => void }) {
             <div className="mt-auto flex items-center justify-between gap-2 border-t-2 border-dashed border-ink/20 pt-3">
               <div className="flex items-center gap-2">
                 <Robo size={52} mood="happy" holding="none" bounce={false} />
-                <span className="text-sm text-ink-soft">Tümünü test et, yıldızları topla!</span>
+                <span className="text-sm text-ink-soft">{t("Tümünü test et, yıldızları topla!", "Test them all and collect the stars!")}</span>
               </div>
               <button type="button" className="btn bg-white !px-3 !py-1.5 !text-sm" onClick={onNext}>
-                Titrasyon →
+                {t("Titrasyon →", "Titration →")}
               </button>
             </div>
           )}
