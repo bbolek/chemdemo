@@ -8,6 +8,7 @@ import { ELEMENTS } from "./chem";
 import { Face, INK, IsoBox, makeIso, onPlaneY } from "./iso";
 import type { Customer } from "./orders";
 import { MINNOS } from "./Story";
+import { useLang } from "@/lib/i18n";
 
 const VW = 400;
 const VH = 300;
@@ -29,6 +30,7 @@ function useWidth() {
 }
 
 function Back() {
+  const { t, lang } = useLang();
   const tiles = [];
   for (let i = 0; i < 6; i++)
     for (let j = 0; j < 6; j++)
@@ -83,8 +85,8 @@ function Back() {
       {/* window + sign */}
       <Face P={P} p={[[1.0, 0, 1.2], [3.2, 0, 1.2], [3.2, 0, 2.3], [1.0, 0, 2.3]]} fill="#d6ecff" />
       <line x1={P(1.3, 0, 2.1)[0]} y1={P(1.3, 0, 2.1)[1]} x2={P(1.7, 0, 1.6)[0]} y2={P(1.7, 0, 1.6)[1]} stroke="white" strokeWidth={4} strokeLinecap="round" />
-      <text transform={onPlaneY(P(2.1, 0, 2.55))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={15} fill="#ff85a8" stroke={INK} strokeWidth={0.6}>
-        MOL MARKET
+      <text transform={onPlaneY(P(2.1, 0, 2.55))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={lang === "en" ? 14 : 15} fill="#ff85a8" stroke={INK} strokeWidth={0.6}>
+        {t("MOL MARKET", "MOLE MARKET")}
       </text>
       {/* floor mat at door */}
       <Face P={P} p={[[3.9, 0.15, 0], [5.2, 0.15, 0], [5.2, 1.0, 0], [3.9, 1.0, 0]]} fill="#ffd6e0" sw={1.5} />
@@ -92,28 +94,43 @@ function Back() {
   );
 }
 
-function Counter({ ka }: { ka: number }) {
-  const [sx, sy] = P(2.95, 3.4, 1.8);
+function Counter() {
+  const { t } = useLang();
   return (
     <svg viewBox={`0 0 ${VW} ${VH}`} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
       <IsoBox P={P} x={0.6} y={3.3} z={0} dx={2.8} dy={0.8} dz={1.1} top="#fff5b8" left="#b69cff" right="#a58af2" />
       <Face P={P} p={[[0.8, 4.1, 0.3], [3.2, 4.1, 0.3], [3.2, 4.1, 0.8], [0.8, 4.1, 0.8]]} fill="#e8dcff" sw={2} />
       <text transform={onPlaneY(P(2.0, 4.1, 0.43))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={12} fill={INK}>
-        KASA 🧺
+        {t("KASA 🧺", "TILL 🧺")}
       </text>
       {/* cash register */}
       <IsoBox P={P} x={2.55} y={3.4} z={1.1} dx={0.7} dy={0.6} dz={0.35} top="#ffd6e0" left="#ff9ebb" right="#ff85a8" sw={2} />
       <IsoBox P={P} x={2.65} y={3.45} z={1.45} dx={0.3} dy={0.45} dz={0.35} top="#d6ecff" left="#8cc8ff" right="#6fb6f5" sw={2} />
-      <motion.g key={ka} initial={{ scale: 0.4, opacity: 0 }} animate={ka ? { scale: [0.4, 1.3, 1, 1], opacity: [0, 1, 1, 0] } : {}}
-        transition={{ duration: 1.8, times: [0, 0.2, 0.8, 1] }} style={{ originX: `${sx}px`, originY: `${sy}px` }}>
-        {ka > 0 && (
-          <text x={sx + 60} y={sy - 8} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={16} fill="#ff85a8" stroke="white" strokeWidth={3} paintOrder="stroke">
-            ka-ching!
-          </text>
-        )}
-      </motion.g>
       {/* basket on counter */}
       <IsoBox P={P} x={1.0} y={3.45} z={1.1} dx={0.7} dy={0.5} dz={0.3} top="#ffe5cc" left="#ffb88a" right="#f59f6c" sw={2} />
+    </svg>
+  );
+}
+
+/** "ka-ching!" pop above the register, drawn on top of the customer layer. */
+function KaChing({ ka }: { ka: number }) {
+  const [rx, ry] = P(2.95, 3.4, 1.8);
+  const x = rx + 30;
+  const y = ry - 45;
+  return (
+    <svg viewBox={`0 0 ${VW} ${VH}`} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
+      {/* pivot at the label's centre in viewBox coords (framer originX on SVG is fill-box relative, so use CSS) */}
+      <style>{`
+        @keyframes mmKaching { 0% { transform: scale(0.4); opacity: 0; } 20% { transform: scale(1.3); opacity: 1; } 80% { transform: scale(1); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+        .mm-kaching { transform-box: view-box; animation: mmKaching 1.8s ease-out forwards; }
+      `}</style>
+      {ka > 0 && (
+        <g key={ka} className="mm-kaching" style={{ transformOrigin: `${x}px ${y - 6}px`, opacity: 0 }}>
+          <text x={x} y={y} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={16} fill="#ff85a8" stroke="white" strokeWidth={3} paintOrder="stroke">
+            ka-ching!
+          </text>
+        </g>
+      )}
     </svg>
   );
 }
@@ -144,7 +161,7 @@ export default function ShopScene({ customer, customerKey, customerMood, minnosM
           <Cat color={MINNOS.color} accent={MINNOS.accent} accessory="chef" mood={minnosMood} size={92 * u} />
         </div>
       </div>
-      <Counter ka={ka} />
+      <Counter />
       <div className="absolute" style={pct(P(0.75, 5.25))}>
         <div style={{ translate: "-50% -100%" }}>
           <Robo mood={roboMood} holding="clipboard" size={70 * u} />
@@ -178,6 +195,7 @@ export default function ShopScene({ customer, customerKey, customerMood, minnosM
           </motion.div>
         )}
       </AnimatePresence>
+      <KaChing ka={ka} />
     </div>
   );
 }
