@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* Pastel palette — use as bg-pink, text-ink, border-lavender-deep etc. */
+@theme {
+  --color-cream: #fff8f0;
+  --color-ink: #4a4063;
+  --color-ink-soft: #7d7396;
+
+  --color-pink: #ffd6e0;
+  --color-pink-deep: #ff9ebb;
+  --color-peach: #ffe5cc;
+  --color-peach-deep: #ffb88a;
+  --color-lemon: #fff5b8;
+  --color-lemon-deep: #ffe066;
+  --color-mint: #d4f5e9;
+  --color-mint-deep: #7fdcb8;
+  --color-sky: #d6ecff;
+  --color-sky-deep: #8cc8ff;
+  --color-lavender: #e8dcff;
+  --color-lavender-deep: #b69cff;
+
+  --font-display: var(--font-baloo), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-nunito), ui-rounded, system-ui, sans-serif;
+
+  --shadow-soft: 0 6px 0 0 rgb(74 64 99 / 0.12), 0 12px 30px -10px rgb(74 64 99 / 0.25);
+  --shadow-pop: 0 4px 0 0 rgb(74 64 99 / 0.25);
+}
+
+html,
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+body {
+  min-height: 100dvh;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgb(255 214 224 / 0.55) 0, transparent 35%),
+    radial-gradient(circle at 90% 10%, rgb(214 236 255 / 0.6) 0, transparent 35%),
+    radial-gradient(circle at 80% 90%, rgb(212 245 233 / 0.6) 0, transparent 35%),
+    radial-gradient(circle at 15% 85%, rgb(232 220 255 / 0.6) 0, transparent 35%);
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+}
+
+@layer components {
+/* Chunky candy button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.7rem 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: 3px solid var(--color-ink);
+  box-shadow: var(--shadow-pop);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s;
+  cursor: pointer;
+  user-select: none;
+}
+.btn:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 rgb(74 64 99 / 0.25);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Soft card */
+.card {
+  background: white;
+  border: 3px solid var(--color-ink);
+  border-radius: 1.75rem;
+  box-shadow: var(--shadow-soft);
+}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
