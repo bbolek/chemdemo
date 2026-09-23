@@ -7,6 +7,7 @@ import Quiz from "@/components/Quiz";
 import Robo from "@/components/Robo";
 import Splash from "@/components/Splash";
 import TopicShell from "@/components/TopicShell";
+import { useLang } from "@/lib/i18n";
 import CatHead, { CAT_COLORS } from "./CatHead";
 import Challenges from "./Challenges";
 import MiniBox from "./MiniBox";
@@ -15,6 +16,7 @@ import Sandbox from "./Sandbox";
 import Story, { POFUDUK } from "./Story";
 
 function SplashArt() {
+  const { t } = useLang();
   return (
     <>
       <Cat {...POFUDUK} mood="happy" size={130} />
@@ -26,7 +28,7 @@ function SplashArt() {
             </motion.span>
           ))}
         </div>
-        <MiniBox count={10} speed={1.4} width={230} height={140} label="💨 gaz kedileri" />
+        <MiniBox count={10} speed={1.4} width={230} height={140} label={t("💨 gaz kedileri", "💨 gas cats")} />
       </div>
       <Robo mood="excited" holding="flask" size={130} />
     </>
@@ -34,27 +36,31 @@ function SplashArt() {
 }
 
 export default function GazlarClient() {
+  const { t, pick } = useLang();
   return (
     <TopicShell
-      title="Gaz Kedileri"
-      subtitle="11. Sınıf · Gazlar ve gaz yasaları"
+      title={t("Gaz Kedileri", "Gas Cats")}
+      subtitle={t("11. Sınıf · Gazlar ve gaz yasaları", "Grade 11 · Gases and the gas laws")}
       emoji="💨"
       color="bg-sky"
       splash={(start) => (
         <Splash
-          title="Gaz Kedileri 💨"
-          tagline="Minik gaz kedileri kutuda koşturuyor! Pistonu it, kutuyu ısıt, kedi ekle: basınç, hacim ve sıcaklığın sırrını keşfet."
+          title={t("Gaz Kedileri 💨", "Gas Cats 💨")}
+          tagline={t(
+            "Minik gaz kedileri kutuda koşturuyor! Pistonu it, kutuyu ısıt, kedi ekle: basınç, hacim ve sıcaklığın sırrını keşfet.",
+            "Tiny gas cats are zooming around a box! Push the piston, heat the box, add cats: discover the secrets of pressure, volume and temperature.",
+          )}
           color="bg-sky"
           onStart={start}
-          startLabel="Kutuyu aç! 🐱"
+          startLabel={t("Kutuyu aç! 🐱", "Open the box! 🐱")}
         >
           <SplashArt />
         </Splash>
       )}
       stages={[
-        { key: "hikaye", label: "📖 Hikaye", content: ({ goTo }) => <Story onDone={() => goTo("kutu")} /> },
-        { key: "kutu", label: "🎮 Gaz Kutusu", content: ({ goTo }) => <Sandbox onNext={() => goTo("gorev")} /> },
-        { key: "gorev", label: "🏆 Görevler", content: ({ goTo }) => <Challenges onFinish={() => goTo("quiz")} /> },
+        { key: "hikaye", label: t("📖 Hikaye", "📖 Story"), content: ({ goTo }) => <Story onDone={() => goTo("kutu")} /> },
+        { key: "kutu", label: t("🎮 Gaz Kutusu", "🎮 Gas Box"), content: ({ goTo }) => <Sandbox onNext={() => goTo("gorev")} /> },
+        { key: "gorev", label: t("🏆 Görevler", "🏆 Missions"), content: ({ goTo }) => <Challenges onFinish={() => goTo("quiz")} /> },
         {
           key: "quiz",
           label: "❓ Quiz",
@@ -63,12 +69,16 @@ export default function GazlarClient() {
               <div className="card flex w-full max-w-2xl items-center gap-3 bg-sky p-3">
                 <Cat {...POFUDUK} mood="thinking" size={70} className="shrink-0" />
                 <p className="text-base md:text-lg">
-                  Son sınav! Hesap sorularında <b>sıcaklığı Kelvin&apos;e çevirmeyi</b> ve <b>R = 0,082</b> değerini unutma. 🧠
+                  {t("Son sınav! Hesap sorularında ", "Final test! In the calculation questions, don't forget to ")}
+                  <b>{t("sıcaklığı Kelvin'e çevirmeyi", "convert temperature to kelvin")}</b>
+                  {t(" ve ", " and to use ")}
+                  <b>{t("R = 0,082", "R = 0.082")}</b>
+                  {t(" değerini unutma. 🧠", ". 🧠")}
                 </p>
               </div>
-              <Quiz questions={QUESTIONS} catColor={POFUDUK.color} />
+              <Quiz questions={pick(QUESTIONS)} catColor={POFUDUK.color} />
               <Link href="/" className="btn bg-white">
-                🏠 Diğer konulara dön
+                {t("🏠 Diğer konulara dön", "🏠 Back to all topics")}
               </Link>
             </div>
           ),

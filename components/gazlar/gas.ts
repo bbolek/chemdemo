@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Lang, Localized } from "@/lib/i18n";
 
 /** İdeal gaz sabiti (L·atm / mol·K) */
 export const R = 0.082;
@@ -33,79 +34,109 @@ export const MODE_LOCKS: Record<GasMode, Locks> = {
 
 export interface ModeInfo {
   key: GasMode;
-  name: string;
-  short: string;
+  name: Localized<string>;
+  short: Localized<string>;
   emoji: string;
-  constant: string;
-  formula: string;
-  idea: string;
-  example: string;
+  constant: Localized<string>;
+  formula: Localized<string>;
+  idea: Localized<string>;
+  example: Localized<string>;
   color: string;
 }
 
 export const MODES: ModeInfo[] = [
   {
     key: "serbest",
-    name: "Serbest Oyun",
-    short: "Serbest",
+    name: { tr: "Serbest Oyun", en: "Free Play" },
+    short: { tr: "Serbest", en: "Free" },
     emoji: "🎈",
-    constant: "Her şey serbest",
-    formula: "P·V = n·R·T",
-    idea: "Pistonu it, kutuyu ısıt, kedi ekle! Hepsi ideal gaz denklemine uyar.",
-    example: "Düdüklü tencere: hacim sabit, ısı artar → basınç artar, yemek daha çabuk pişer.",
+    constant: { tr: "Her şey serbest", en: "Everything can change" },
+    formula: { tr: "P·V = n·R·T", en: "P·V = n·R·T" },
+    idea: {
+      tr: "Pistonu it, kutuyu ısıt, kedi ekle! Hepsi ideal gaz denklemine uyar.",
+      en: "Push the piston, heat the box, add cats! Everything obeys the ideal gas equation.",
+    },
+    example: {
+      tr: "Düdüklü tencere: hacim sabit, ısı artar → basınç artar, yemek daha çabuk pişer.",
+      en: "Pressure cooker: volume stays fixed, heat goes up → pressure goes up, and food cooks faster.",
+    },
     color: "bg-lavender",
   },
   {
     key: "boyle",
-    name: "Boyle Yasası",
-    short: "Boyle",
+    name: { tr: "Boyle Yasası", en: "Boyle's Law" },
+    short: { tr: "Boyle", en: "Boyle" },
     emoji: "🤏",
-    constant: "T ve n sabit",
-    formula: "P·V = sabit",
-    idea: "Hacmi küçült → kediler duvarlara daha sık çarpar → basınç artar. Hacim yarıya inerse basınç 2 katına çıkar.",
-    example: "Bisiklet pompası ve dalgıç: derine inildikçe basınç artar, hava kabarcıkları küçülür; yüzeye çıkarken büyür.",
+    constant: { tr: "T ve n sabit", en: "T and n constant" },
+    formula: { tr: "P·V = sabit", en: "P·V = constant" },
+    idea: {
+      tr: "Hacmi küçült → kediler duvarlara daha sık çarpar → basınç artar. Hacim yarıya inerse basınç 2 katına çıkar.",
+      en: "Shrink the volume → the cats hit the walls more often → pressure rises. Halve the volume and the pressure doubles.",
+    },
+    example: {
+      tr: "Bisiklet pompası ve dalgıç: derine inildikçe basınç artar, hava kabarcıkları küçülür; yüzeye çıkarken büyür.",
+      en: "Bike pumps and divers: the deeper you go, the higher the pressure and the smaller the air bubbles; they grow again on the way up.",
+    },
     color: "bg-sky",
   },
   {
     key: "charles",
-    name: "Charles Yasası",
-    short: "Charles",
+    name: { tr: "Charles Yasası", en: "Charles's Law" },
+    short: { tr: "Charles", en: "Charles" },
     emoji: "🔥",
-    constant: "P ve n sabit",
-    formula: "V / T = sabit",
-    idea: "Isıtınca kediler hızlanır, pistonu yukarı iter → hacim artar. Sıcaklık MUTLAKA Kelvin olmalı!",
-    example: "Güneşte bırakılan balon şişer, buzdolabına konan balon büzülür.",
+    constant: { tr: "P ve n sabit", en: "P and n constant" },
+    formula: { tr: "V / T = sabit", en: "V / T = constant" },
+    idea: {
+      tr: "Isıtınca kediler hızlanır, pistonu yukarı iter → hacim artar. Sıcaklık MUTLAKA Kelvin olmalı!",
+      en: "Heat it up and the cats speed up and push the piston higher → volume increases. Temperature MUST be in kelvin!",
+    },
+    example: {
+      tr: "Güneşte bırakılan balon şişer, buzdolabına konan balon büzülür.",
+      en: "A balloon left in the sun swells; a balloon put in the fridge shrinks.",
+    },
     color: "bg-peach",
   },
   {
     key: "gaylussac",
-    name: "Gay-Lussac Yasası",
-    short: "Gay-Lussac",
+    name: { tr: "Gay-Lussac Yasası", en: "Gay-Lussac's Law" },
+    short: { tr: "Gay-Lussac", en: "Gay-Lussac" },
     emoji: "🔒",
-    constant: "V ve n sabit",
-    formula: "P / T = sabit",
-    idea: "Piston kilitli. Isıtınca kediler hem daha hızlı hem daha sert çarpar → basınç artar.",
-    example: "Yazın sıcakta araba lastiği patlayabilir; sprey kutuları ateşe atılmaz!",
+    constant: { tr: "V ve n sabit", en: "V and n constant" },
+    formula: { tr: "P / T = sabit", en: "P / T = constant" },
+    idea: {
+      tr: "Piston kilitli. Isıtınca kediler hem daha hızlı hem daha sert çarpar → basınç artar.",
+      en: "The piston is locked. Heat it up and the cats hit the walls more often and harder → pressure rises.",
+    },
+    example: {
+      tr: "Yazın sıcakta araba lastiği patlayabilir; sprey kutuları ateşe atılmaz!",
+      en: "Car tyres can burst on hot summer days, and aerosol cans must never go in a fire!",
+    },
     color: "bg-pink",
   },
   {
     key: "avogadro",
-    name: "Avogadro Yasası",
-    short: "Avogadro",
+    name: { tr: "Avogadro Yasası", en: "Avogadro's Law" },
+    short: { tr: "Avogadro", en: "Avogadro" },
     emoji: "🐱",
-    constant: "P ve T sabit",
-    formula: "V / n = sabit",
-    idea: "Daha çok kedi (mol) → daha çok çarpışma → piston yükselir, hacim artar.",
-    example: "Balonu üfleyerek şişirmek: içeri daha çok gaz taneciği girer, balon büyür.",
+    constant: { tr: "P ve T sabit", en: "P and T constant" },
+    formula: { tr: "V / n = sabit", en: "V / n = constant" },
+    idea: {
+      tr: "Daha çok kedi (mol) → daha çok çarpışma → piston yükselir, hacim artar.",
+      en: "More cats (moles) → more collisions → the piston rises and the volume increases.",
+    },
+    example: {
+      tr: "Balonu üfleyerek şişirmek: içeri daha çok gaz taneciği girer, balon büyür.",
+      en: "Blowing up a balloon: more gas particles go in, so the balloon gets bigger.",
+    },
     color: "bg-mint",
   },
 ];
 
 export const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
 
-/** Türkçe sayı biçimi: 3,08 */
-export const fmt = (x: number, d = 2) =>
-  x.toLocaleString("tr-TR", { minimumFractionDigits: d, maximumFractionDigits: d });
+/** Dile göre sayı biçimi: 3,08 (tr) / 3.08 (en) */
+export const fmt = (x: number, d = 2, lang: Lang = "tr") =>
+  x.toLocaleString(lang === "en" ? "en-US" : "tr-TR", { minimumFractionDigits: d, maximumFractionDigits: d });
 
 export interface GasInit {
   T: number;
