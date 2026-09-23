@@ -22,7 +22,7 @@ export default function Storefront({ className = "" }: { className?: string }) {
     <motion.svg
       viewBox="0 0 410 330"
       className={className}
-      aria-label={t("Mol Market dükkânı", "The Mole Market shop")}
+      aria-label={t("Mol Market dükkânı", "The Mole Market shop", "Der Laden Mol-Markt")}
       overflow="visible"
       role="img"
       animate={{ y: [0, -5, 0] }}
@@ -46,8 +46,8 @@ export default function Storefront({ className = "" }: { className?: string }) {
       <IsoBox P={P} x={-0.15} y={-0.15} z={H} dx={W + 0.3} dy={D + 0.3} dz={0.25} top="#b69cff" left="#cbb8ff" right="#a58af2" />
       {/* roof sign board */}
       <IsoBox P={P} x={0.7} y={D - 0.2} z={H + 0.25} dx={3.6} dy={0.15} dz={1.05} top="#ffe066" left="#ff9ebb" right="#ff85a8" />
-      <text transform={onPlaneY(P(2.5, D - 0.05, H + 0.6))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={lang === "en" ? 21 : 23} textLength={98} lengthAdjust="spacingAndGlyphs" fill="white" stroke={INK} strokeWidth={1.2} paintOrder="stroke">
-        {t("MOL MARKET", "MOLE MARKET")}
+      <text transform={onPlaneY(P(2.5, D - 0.05, H + 0.6))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={lang === "tr" ? 23 : 21} textLength={98} lengthAdjust="spacingAndGlyphs" fill="white" stroke={INK} strokeWidth={1.2} paintOrder="stroke">
+        {t("MOL MARKET", "MOLE MARKET", "MOL-MARKT")}
       </text>
 
       {/* windows on the front */}
@@ -73,8 +73,8 @@ export default function Storefront({ className = "" }: { className?: string }) {
       <Face P={P} p={[F(1.95, 0), F(3.05, 0), F(3.05, 1.95), F(1.95, 1.95)]} fill="#b69cff" />
       <Face P={P} p={[F(2.1, 0.9), F(2.9, 0.9), F(2.9, 1.8), F(2.1, 1.8)]} fill="#e8dcff" sw={2} />
       <circle cx={P(2.85, D, 0.8)[0]} cy={P(2.85, D, 0.8)[1]} r={3} fill="#ffe066" stroke={INK} strokeWidth={1.5} />
-      <text transform={onPlaneY(P(2.5, D, 1.25))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={10} fill={INK}>
-        {t("AÇIK", "OPEN")}
+      <text transform={onPlaneY(P(2.5, D, 1.25))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={lang === "de" ? 7.5 : 10} fill={INK} {...(lang === "de" ? { textLength: 25, lengthAdjust: "spacingAndGlyphs" } : {})}>
+        {t("AÇIK", "OPEN", "GEÖFFNET")}
       </text>
 
       {/* striped awning */}
@@ -99,7 +99,7 @@ export default function Storefront({ className = "" }: { className?: string }) {
         1 mol =
       </text>
       <text transform={onPlaneX(P(W, 1.5, 1.3))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={12} textLength={60} lengthAdjust="spacingAndGlyphs" fill="#e0668f">
-        {t("6,02·10²³ tane!", "6.02×10²³ bits!")}
+        {t("6,02·10²³ tane!", "6.02×10²³ bits!", "6,02·10²³ Stück!")}
       </text>
 
       {/* bushes & basket stand */}

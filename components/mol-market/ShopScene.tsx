@@ -86,7 +86,7 @@ function Back() {
       <Face P={P} p={[[1.0, 0, 1.2], [3.2, 0, 1.2], [3.2, 0, 2.3], [1.0, 0, 2.3]]} fill="#d6ecff" />
       <line x1={P(1.3, 0, 2.1)[0]} y1={P(1.3, 0, 2.1)[1]} x2={P(1.7, 0, 1.6)[0]} y2={P(1.7, 0, 1.6)[1]} stroke="white" strokeWidth={4} strokeLinecap="round" />
       <text transform={onPlaneY(P(2.1, 0, 2.55))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={lang === "en" ? 14 : 15} fill="#ff85a8" stroke={INK} strokeWidth={0.6}>
-        {t("MOL MARKET", "MOLE MARKET")}
+        {t("MOL MARKET", "MOLE MARKET", "MOL-MARKT")}
       </text>
       {/* floor mat at door */}
       <Face P={P} p={[[3.9, 0.15, 0], [5.2, 0.15, 0], [5.2, 1.0, 0], [3.9, 1.0, 0]]} fill="#ffd6e0" sw={1.5} />
@@ -101,7 +101,7 @@ function Counter() {
       <IsoBox P={P} x={0.6} y={3.3} z={0} dx={2.8} dy={0.8} dz={1.1} top="#fff5b8" left="#b69cff" right="#a58af2" />
       <Face P={P} p={[[0.8, 4.1, 0.3], [3.2, 4.1, 0.3], [3.2, 4.1, 0.8], [0.8, 4.1, 0.8]]} fill="#e8dcff" sw={2} />
       <text transform={onPlaneY(P(2.0, 4.1, 0.43))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={12} fill={INK}>
-        {t("KASA 🧺", "TILL 🧺")}
+        {t("KASA 🧺", "TILL 🧺", "KASSE 🧺")}
       </text>
       {/* cash register */}
       <IsoBox P={P} x={2.55} y={3.4} z={1.1} dx={0.7} dy={0.6} dz={0.35} top="#ffd6e0" left="#ff9ebb" right="#ff85a8" sw={2} />

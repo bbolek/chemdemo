@@ -16,7 +16,7 @@ type Particle = "molecule" | "atom" | "formula";
 interface Round {
   sub: string;
   M: number;
-  /** Sum of atomic masses; "*" is rendered as "·" (tr) or "×" (en) */
+  /** Sum of atomic masses; "*" is rendered as "·" (tr, de) or "×" (en) */
   Mcalc: string;
   gas: boolean;
   particle: Particle;
@@ -36,9 +36,9 @@ const ROUNDS: Round[] = [
 ];
 
 const PARTICLE: Record<Particle, Localized<string>> = {
-  molecule: loc("molekül", "molecules"),
-  atom: loc("atom", "atoms"),
-  formula: loc("formül birimi", "formula units"),
+  molecule: loc("molekül", "molecules", "Moleküle"),
+  atom: loc("atom", "atoms", "Atome"),
+  formula: loc("formül birimi", "formula units", "Formeleinheiten"),
 };
 
 interface Op {
@@ -60,17 +60,17 @@ const OPS: Op[] = [
 ];
 
 const STATIONS: Record<Unit, { name: Localized<string>; unit: Localized<string>; emoji: string; x: number; y: number; color: string }> = {
-  g: { name: loc("Kütle", "Mass"), unit: loc("gram", "grams"), emoji: "⚖️", x: 15, y: 34, color: "bg-peach" },
-  mol: { name: loc("Mol", "Moles"), unit: loc("mol", "mol"), emoji: "🧺", x: 50, y: 34, color: "bg-lemon" },
-  N: { name: loc("Tanecik", "Particles"), unit: loc("tane", "count"), emoji: "✨", x: 85, y: 34, color: "bg-pink" },
-  L: { name: loc("Hacim (NK)", "Volume (STP)"), unit: loc("litre", "litres"), emoji: "🎈", x: 50, y: 78, color: "bg-sky" },
+  g: { name: loc("Kütle", "Mass", "Masse"), unit: loc("gram", "grams", "Gramm"), emoji: "⚖️", x: 15, y: 34, color: "bg-peach" },
+  mol: { name: loc("Mol", "Moles", "Mol"), unit: loc("mol", "mol", "mol"), emoji: "🧺", x: 50, y: 34, color: "bg-lemon" },
+  N: { name: loc("Tanecik", "Particles", "Teilchen"), unit: loc("tane", "count", "Stück"), emoji: "✨", x: 85, y: 34, color: "bg-pink" },
+  L: { name: loc("Hacim (NK)", "Volume (STP)", "Gasvolumen"), unit: loc("litre", "litres", "Liter"), emoji: "🎈", x: 50, y: 78, color: "bg-sky" },
 };
 
 const UNIT_NAME: Record<Unit, Localized<string>> = {
-  g: loc("kütle (gram)", "mass (grams)"),
-  mol: loc("mol sayısı", "number of moles"),
-  N: loc("tanecik sayısı", "number of particles"),
-  L: loc("hacim (NK, litre)", "volume (STP, litres)"),
+  g: loc("kütle (gram)", "mass (grams)", "Masse (Gramm)"),
+  mol: loc("mol sayısı", "number of moles", "Mol (Stoffmenge)"),
+  N: loc("tanecik sayısı", "number of particles", "Teilchenzahl"),
+  L: loc("hacim (NK, litre)", "volume (STP, litres)", "Gasvolumen bei Normbedingungen"),
 };
 
 /** Feedback is stored language-independently and turned into text at render time. */
@@ -190,7 +190,7 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
 
   const total = stars.reduce((a, b) => a + (b ?? 0), 0);
 
-  const dot = (s: string) => s.split("*").join(lang === "tr" ? "·" : "×");
+  const dot = (s: string) => s.split("*").join(lang === "en" ? "×" : "·");
   const unitName = (u: Unit) => pick(UNIT_NAME[u]);
   const trailText = (id: string) => {
     const op = OPS.find((o) => o.id === id)!;
@@ -201,15 +201,18 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
       ? t(
           `Bu işlem ${unitName(m.from)} istasyonunda çalışır. Paket şu an ${unitName(m.at)} istasyonunda! Tüm yollar önce MOL'e çıkar. 🧺`,
           `This operation works at the ${unitName(m.from)} station. The pack is at the ${unitName(m.at)} station right now! Every route goes through MOLES first. 🧺`,
+          `Diese Rechnung klappt nur an der Station „${unitName(m.from)}“. Die Packung steht gerade bei „${unitName(m.at)}“! Jeder Weg führt zuerst über MOL. 🧺`,
         )
       : m.kind === "notGas"
         ? t(
             `${r.sub} gaz değil! 22,4 L kuralı sadece normal koşullardaki gazlar için geçerli.`,
             `${r.sub} isn't a gas! The 22.4 L rule only works for gases at STP.`,
+            `${r.sub} ist kein Gas! Die 22,4-L-Regel gilt nur für Gase bei Normbedingungen.`,
           )
         : t(
             `Hmm, paket ${unitName(m.to)} tarafına gidiyor ama hedef ${unitName(r.target)}. Başka bir işlem dene!`,
             `Hmm, that sends the pack towards ${unitName(m.to)}, but the target is ${unitName(r.target)}. Try another operation!`,
+            `Hmm, damit fährt die Packung Richtung „${unitName(m.to)}“, aber das Ziel ist „${unitName(r.target)}“. Probier eine andere Rechnung!`,
           );
 
   if (finished) {
@@ -219,22 +222,23 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
           <Cat color={MINNOS.color} accent={MINNOS.accent} accessory="chef" mood="love" size={120} />
           <Robo mood="excited" holding="clipboard" size={100} />
         </div>
-        <h3 className="text-3xl font-extrabold">{t("Bant ustası oldun! 🏭", "Conveyor master! 🏭")}</h3>
+        <h3 className="text-3xl font-extrabold">{t("Bant ustası oldun! 🏭", "Conveyor master! 🏭", "Fließband-Profi! 🏭")}</h3>
         <p className="text-xl">
-          {t("Toplam", "Total")} ⭐ {total} / {ROUNDS.length * 3}
+          {t("Toplam", "Total", "Gesamt")} ⭐ {total} / {ROUNDS.length * 3}
         </p>
         <p className="text-lg">
           {t(
             "Unutma: kütle, tanecik ve hacim arasında giderken hep önce MOL'e uğrarız!",
             "Remember: whenever you travel between mass, particles and volume, always stop at MOLES first!",
+            "Merke: Wenn du zwischen Masse, Teilchenzahl und Volumen wechselst, machst du immer zuerst einen Halt bei MOL!",
           )}
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           <button type="button" className="btn bg-white" onClick={() => (setStars([]), setFinished(false), load(0))}>
-            {t("Tekrar 🔁", "Again 🔁")}
+            {t("Tekrar 🔁", "Again 🔁", "Nochmal 🔁")}
           </button>
           <button type="button" className="btn bg-lemon-deep" onClick={onNext}>
-            {t("Quiz'e geç ❓ →", "On to the quiz ❓ →")}
+            {t("Quiz'e geç ❓ →", "On to the quiz ❓ →", "Weiter zum Quiz ❓ →")}
           </button>
         </div>
       </motion.div>
@@ -256,12 +260,16 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
       <div className="card flex flex-col gap-2 bg-lavender p-4 sm:flex-row sm:items-center">
         <div className="flex-1">
           <p className="font-display text-sm font-bold text-ink-soft">
-            {t("Paket", "Pack")} {ri + 1} / {ROUNDS.length} · M({r.sub}) = {dot(r.Mcalc)} = {r.M} g/mol
-            {r.gas ? t(" · gaz 🎈", " · gas 🎈") : t(" · gaz değil", " · not a gas")}
+            {t("Paket", "Pack", "Packung")} {ri + 1} / {ROUNDS.length} · M({r.sub}) = {dot(r.Mcalc)} = {r.M} g/mol
+            {r.gas ? t(" · gaz 🎈", " · gas 🎈", " · Gas 🎈") : t(" · gaz değil", " · not a gas", " · kein Gas")}
           </p>
           {lang === "tr" ? (
             <p className="text-lg font-semibold md:text-xl">
               <b>{show(r.value, r.start, r, lang)}</b> {r.sub} paketini <b className="rounded-lg bg-lemon-deep px-1.5">{unitName(r.target)}</b> istasyonuna taşı!
+            </p>
+          ) : lang === "de" ? (
+            <p className="text-lg font-semibold md:text-xl">
+              Bring die Packung <b>{show(r.value, r.start, r, lang)}</b> {r.sub} zur Station <b className="rounded-lg bg-lemon-deep px-1.5">{unitName(r.target)}</b>!
             </p>
           ) : (
             <p className="text-lg font-semibold md:text-xl">
@@ -298,7 +306,7 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
                 <span className="text-2xl leading-none">{s.emoji}</span>
                 <span className="text-center font-display text-sm font-bold leading-tight sm:text-base">{pick(s.name)}</span>
                 <span className="text-[11px] font-semibold text-ink-soft">{pick(s.unit)}</span>
-                {isTarget && <span className="absolute -top-3 rounded-full border-2 border-ink bg-pink-deep px-2 text-[10px] font-bold text-white">{t("HEDEF", "TARGET")}</span>}
+                {isTarget && <span className="absolute -top-3 rounded-full border-2 border-ink bg-pink-deep px-2 text-[10px] font-bold text-white">{t("HEDEF", "TARGET", "ZIEL")}</span>}
               </div>
             </div>
           );
@@ -327,7 +335,7 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
 
       {/* formula trail */}
       <div className="card flex flex-wrap items-center gap-2 bg-white p-3 font-display font-bold">
-        <span className="text-ink-soft">{t("Hesap şeridi:", "Working:")}</span>
+        <span className="text-ink-soft">{t("Hesap şeridi:", "Working:", "Rechenweg:")}</span>
         <span className="rounded-lg bg-peach px-2">{show(r.value, r.start, r, lang)}</span>
         {trail.map((id, k) => (
           <motion.span key={k} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="rounded-lg bg-lavender px-2">
@@ -367,10 +375,10 @@ export default function Conveyor({ onNext }: { onNext: () => void }) {
           <motion.div key="ok" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="card flex flex-col items-center gap-2 bg-mint p-3 text-center sm:flex-row sm:gap-3 sm:text-left">
             <span className="text-3xl">{"⭐".repeat(stars[ri] ?? 1)}</span>
             <p className="flex-1 font-semibold">
-              {t("Paket teslim!", "Pack delivered!")} {show(r.value, r.start, r, lang)} {r.sub} = <b>{show(val, pos, r, lang)}</b>
+              {t("Paket teslim!", "Pack delivered!", "Packung geliefert!")} {show(r.value, r.start, r, lang)} {r.sub} = <b>{show(val, pos, r, lang)}</b>
             </p>
             <button type="button" className="btn bg-lemon-deep" onClick={next}>
-              {ri === ROUNDS.length - 1 ? t("Bitir 🏁", "Finish 🏁") : t("Sonraki paket →", "Next pack →")}
+              {ri === ROUNDS.length - 1 ? t("Bitir 🏁", "Finish 🏁", "Fertig 🏁") : t("Sonraki paket →", "Next pack →", "Nächste Packung →")}
             </button>
           </motion.div>
         )}
