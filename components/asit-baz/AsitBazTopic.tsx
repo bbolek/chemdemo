@@ -6,6 +6,7 @@ import Robo from "@/components/Robo";
 import Quiz from "@/components/Quiz";
 import Splash from "@/components/Splash";
 import TopicShell from "@/components/TopicShell";
+import { useLang } from "@/lib/i18n";
 import LabGame from "./LabGame";
 import Story, { MIRMIR } from "./Story";
 import Titration from "./Titration";
@@ -15,19 +16,23 @@ import { QUESTIONS } from "./questions";
 const SUSPECTS = ["🍋", "🧼", "🥛", "🧴", "🍶", "🥤"];
 
 export default function AsitBazTopic() {
+  const { t, pick } = useLang();
   return (
     <TopicShell
-      title="Asit mi Baz mı?"
-      subtitle="Dedektif Mırmır ile pH ve nötrleşme"
+      title={t("Asit mi Baz mı?", "Acid or Base?")}
+      subtitle={t("Dedektif Mırmır ile pH ve nötrleşme", "pH and neutralization with Detective Purr")}
       emoji="🍋"
       color="bg-lemon"
       splash={(start) => (
         <Splash
-          title="🔍 Mutfak Gizemi"
-          tagline="Mutfakta ekşi, kaygan ve yakıcı şüpheliler var! Dedektif Mırmır ve Robo ile hangisi asit, hangisi baz, bulalım."
+          title={t("🔍 Mutfak Gizemi", "🔍 The Kitchen Mystery")}
+          tagline={t(
+            "Mutfakta ekşi, kaygan ve yakıcı şüpheliler var! Dedektif Mırmır ve Robo ile hangisi asit, hangisi baz, bulalım.",
+            "The kitchen is full of sour, slippery and corrosive suspects! Let's team up with Detective Purr and Robo to find out which are acids and which are bases.",
+          )}
           color="bg-lemon"
           onStart={start}
-          startLabel="Soruşturmayı Başlat! 🕵️"
+          startLabel={t("Soruşturmayı Başlat! 🕵️", "Start the Investigation! 🕵️")}
         >
           <Cat color={MIRMIR.color} accent={MIRMIR.accent} accessory="detective" mood="wink" size={170} />
           <div className="flex max-w-[180px] flex-wrap justify-center gap-1 pb-6">
@@ -46,19 +51,21 @@ export default function AsitBazTopic() {
         </Splash>
       )}
       stages={[
-        { key: "hikaye", label: "📖 Hikaye", content: ({ goTo }) => <Story onDone={() => goTo("lab")} /> },
-        { key: "lab", label: "🧪 Laboratuvar", content: ({ goTo }) => <LabGame onNext={() => goTo("titrasyon")} /> },
-        { key: "titrasyon", label: "⚗️ Titrasyon", content: ({ goTo }) => <Titration onNext={() => goTo("quiz")} /> },
+        { key: "hikaye", label: t("📖 Hikaye", "📖 Story"), content: ({ goTo }) => <Story onDone={() => goTo("lab")} /> },
+        { key: "lab", label: t("🧪 Laboratuvar", "🧪 Lab"), content: ({ goTo }) => <LabGame onNext={() => goTo("titrasyon")} /> },
+        { key: "titrasyon", label: t("⚗️ Titrasyon", "⚗️ Titration"), content: ({ goTo }) => <Titration onNext={() => goTo("quiz")} /> },
         {
           key: "quiz",
           label: "❓ Quiz",
           content: () => (
             <div className="flex flex-col gap-5">
               <div className="card mx-auto w-full max-w-2xl bg-lemon p-4">
-                <p className="mb-2 text-center font-display font-bold">Hatırla: pH 7 nötr · 7&apos;den küçük asidik · 7&apos;den büyük bazik</p>
+                <p className="mb-2 text-center font-display font-bold">
+                  {t("Hatırla: pH 7 nötr · 7'den küçük asidik · 7'den büyük bazik", "Remember: pH 7 is neutral · below 7 is acidic · above 7 is basic")}
+                </p>
                 <PhScale compact />
               </div>
-              <Quiz questions={QUESTIONS} catColor={MIRMIR.color} />
+              <Quiz questions={pick(QUESTIONS)} catColor={MIRMIR.color} />
             </div>
           ),
         },

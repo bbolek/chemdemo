@@ -2,12 +2,14 @@
 
 import { motion, useSpring, useTransform } from "framer-motion";
 import { useEffect, useId } from "react";
+import { useLang } from "@/lib/i18n";
 import { PH_GRADIENT, lighten, phColor } from "./ph";
 
 const INK = "#4a4063";
 
 /** Horizontal universal-indicator pH scale with optional marker. */
 export function PhScale({ marker, labels = true, compact = false }: { marker?: number; labels?: boolean; compact?: boolean }) {
+  const { t } = useLang();
   return (
     <div className="w-full">
       <div className="relative">
@@ -32,9 +34,9 @@ export function PhScale({ marker, labels = true, compact = false }: { marker?: n
             ))}
           </div>
           <div className="mt-0.5 flex justify-between font-display text-xs font-bold sm:text-sm">
-            <span className="text-[#e0485f]">◀ asidik</span>
-            <span className="text-[#3f9e4d]">nötr</span>
-            <span className="text-[#7a4fd0]">bazik ▶</span>
+            <span className="text-[#e0485f]">◀ {t("asidik", "acidic")}</span>
+            <span className="text-[#3f9e4d]">{t("nötr", "neutral")}</span>
+            <span className="text-[#7a4fd0]">{t("bazik", "basic")} ▶</span>
           </div>
         </>
       )}
@@ -44,6 +46,7 @@ export function PhScale({ marker, labels = true, compact = false }: { marker?: n
 
 /** Semicircle pH meter with a springy needle. */
 export function PhMeter({ ph, size = 190, showValue = true }: { ph: number | null; size?: number; showValue?: boolean }) {
+  const { num } = useLang();
   const r = 80;
   const cx = 100;
   const cy = 100;
@@ -78,7 +81,7 @@ export function PhMeter({ ph, size = 190, showValue = true }: { ph: number | nul
       <circle cx={cx} cy={cy} r="9" fill="#ff9ebb" stroke={INK} strokeWidth="4" />
       {showValue && (
         <text x={cx} y="122" textAnchor="middle" fontSize="14" fontWeight="800" fill={INK} fontFamily="var(--font-display)">
-          pH = {ph === null ? "?" : ph.toFixed(ph >= 13.95 || ph <= 0.05 ? 0 : 1)}
+          pH = {ph === null ? "?" : num(ph, ph >= 13.95 || ph <= 0.05 ? 0 : 1)}
         </text>
       )}
     </svg>
