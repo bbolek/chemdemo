@@ -1,5 +1,6 @@
 "use client";
 
+import type { Localized } from "@/lib/i18n";
 import { parseFormula } from "./chem";
 
 /** Pastel CPK-ish palette: [main, shade] */
@@ -17,18 +18,18 @@ export const ELEMENT_COLORS: Record<string, [string, string]> = {
   Ca: ["#ffe27a", "#e6b93f"],
 };
 
-export const ELEMENT_NAMES: Record<string, string> = {
-  H: "Hidrojen",
-  O: "Oksijen",
-  N: "Azot",
-  C: "Karbon",
-  Na: "Sodyum",
-  K: "Potasyum",
-  Cl: "Klor",
-  Mg: "Magnezyum",
-  Al: "Alüminyum",
-  Fe: "Demir",
-  Ca: "Kalsiyum",
+export const ELEMENT_NAMES: Record<string, Localized<string>> = {
+  H: { tr: "Hidrojen", en: "Hydrogen" },
+  O: { tr: "Oksijen", en: "Oxygen" },
+  N: { tr: "Azot", en: "Nitrogen" },
+  C: { tr: "Karbon", en: "Carbon" },
+  Na: { tr: "Sodyum", en: "Sodium" },
+  K: { tr: "Potasyum", en: "Potassium" },
+  Cl: { tr: "Klor", en: "Chlorine" },
+  Mg: { tr: "Magnezyum", en: "Magnesium" },
+  Al: { tr: "Alüminyum", en: "Aluminium" },
+  Fe: { tr: "Demir", en: "Iron" },
+  Ca: { tr: "Kalsiyum", en: "Calcium" },
 };
 
 const RADIUS: Record<string, number> = { H: 0.62, O: 0.95, N: 0.95, C: 0.95, Cl: 1.1, Na: 1.2, K: 1.3, Mg: 1.1, Al: 1.1, Fe: 1.15, Ca: 1.25 };

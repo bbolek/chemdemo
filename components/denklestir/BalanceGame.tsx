@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import Cat from "@/components/Cat";
 import Robo from "@/components/Robo";
 import { useSound } from "@/lib/sound";
+import { useLang } from "@/lib/i18n";
 import { celebrate, sparkleAt } from "@/lib/confetti";
 import { LEVELS, check, gcdAll, minMoves, parseFormula, pretty, starsFor, type Level } from "./chem";
 import Molecule, { Ball, ELEMENT_NAMES, moleculeWidth } from "./Molecule";
@@ -92,13 +93,14 @@ function StarRow({ n, size = "text-lg" }: { n: number; size?: string }) {
 function LevelMap({ stars, onPick, onQuiz }: { stars: number[]; onPick: (k: number) => void; onQuiz: () => void }) {
   const total = stars.reduce((a, b) => a + b, 0);
   const { play } = useSound();
+  const { t, pick } = useLang();
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
       <div className="card flex flex-wrap items-center gap-3 bg-mint p-4">
         <Cat color={TEKIR.color} accent={TEKIR.accent} accessory="bowtie" mood="happy" size={72} />
         <div className="min-w-0 flex-1 basis-40">
-          <h2 className="text-2xl font-bold">Terazi Haritası</h2>
-          <p className="text-ink-soft">Bir seviye seç, katsayılarla teraziyi dengele! Az hamle = çok yıldız.</p>
+          <h2 className="text-2xl font-bold">{t("Terazi Haritası", "Scale Map")}</h2>
+          <p className="text-ink-soft">{t("Bir seviye seç, katsayılarla teraziyi dengele! Az hamle = çok yıldız.", "Pick a level and balance the scale with coefficients! Fewer moves = more stars.")}</p>
         </div>
         <div className="card w-full bg-white px-4 py-2 text-center font-display text-xl font-bold sm:w-auto">
           ⭐ {total} / {LEVELS.length * 3}
@@ -140,7 +142,7 @@ function LevelMap({ stars, onPick, onQuiz }: { stars: number[]; onPick: (k: numb
                     />
                   )}
                 </div>
-                <span className="font-display text-sm font-bold leading-tight">{lv.boss ? `Boss: ${lv.name}` : lv.name}</span>
+                <span className="font-display text-sm font-bold leading-tight">{lv.boss ? `Boss: ${pick(lv.name)}` : pick(lv.name)}</span>
                 <span className="hidden text-xs text-ink-soft sm:block">
                   {lv.left.map(pretty).join(" + ")} → {lv.right.map(pretty).join(" + ")}
                 </span>
@@ -152,9 +154,9 @@ function LevelMap({ stars, onPick, onQuiz }: { stars: number[]; onPick: (k: numb
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <p className="text-ink-soft">Hazır hissediyor musun?</p>
+        <p className="text-ink-soft">{t("Hazır hissediyor musun?", "Feeling ready?")}</p>
         <button type="button" className="btn bg-lavender-deep" onClick={() => (play("click"), onQuiz())}>
-          Quiz'e geç ❓
+          {t("Quiz'e geç ❓", "Go to the quiz ❓")}
         </button>
       </div>
     </div>
@@ -215,6 +217,7 @@ function LevelPlay({
   const [hint, setHint] = useState(false);
   const [won, setWon] = useState<number | null>(null);
   const { play } = useSound();
+  const { t, pick } = useLang();
   const tableRef = useRef<HTMLDivElement>(null);
 
   const res = useMemo(() => check(level, coefs), [level, coefs]);
@@ -268,32 +271,39 @@ function LevelPlay({
 
   const g = gcdAll(coefs);
   const tekirMood = res.solved ? "love" : res.equal ? "wink" : Math.abs(angle) > 8 ? "surprised" : "thinking";
-  const leanText = angle > 0 ? "Sağ kefe ağır basıyor" : "Sol kefe ağır basıyor";
+  const leanText = angle > 0 ? t("Sağ kefe ağır basıyor", "The right pan is heavier") : t("Sol kefe ağır basıyor", "The left pan is heavier");
 
   const status = res.solved
-    ? { text: "Mükemmel denge! Atomlar korundu! 🎉", cls: "bg-mint-deep" }
+    ? { key: "solved", text: t("Mükemmel denge! Atomlar korundu! 🎉", "Perfect balance! Atoms conserved! 🎉"), cls: "bg-mint-deep" }
     : res.equal
-      ? { text: `Denge var ama katsayılar en küçük tam sayılar değil. Hepsini ${g}'ye bölebilirsin!`, cls: "bg-lemon-deep" }
-      : { text: `${leanText}. Hangi atom eksik? Tabloya bak!`, cls: "bg-pink" };
+      ? {
+          key: `equal-${g}`,
+          text: t(
+            `Denge var ama katsayılar en küçük tam sayılar değil. Hepsini ${g}'ye bölebilirsin!`,
+            `It's balanced, but these aren't the smallest whole numbers. You can divide them all by ${g}!`,
+          ),
+          cls: "bg-lemon-deep",
+        }
+      : { key: `lean-${angle > 0 ? "r" : "l"}`, text: t(`${leanText}. Hangi atom eksik? Tabloya bak!`, `${leanText}. Which atom is missing? Check the table!`), cls: "bg-pink" };
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-3">
       {/* top bar */}
       <div className="flex items-center justify-between gap-2">
-        <button type="button" aria-label="Harita" className="btn shrink-0 bg-white !px-3 !py-2 sm:!px-5" onClick={() => (play("click"), onMap())}>
-          🗺️ <span className="hidden sm:inline">Harita</span>
+        <button type="button" aria-label={t("Harita", "Map")} className="btn shrink-0 bg-white !px-3 !py-2 sm:!px-5" onClick={() => (play("click"), onMap())}>
+          🗺️ <span className="hidden sm:inline">{t("Harita", "Map")}</span>
         </button>
         <div className="min-w-0 text-center">
           <p className="font-display text-xs font-bold text-ink-soft sm:text-sm">
-            {level.boss ? "👑 BOSS SEVİYESİ" : `Seviye ${level.id} / ${LEVELS.length}`}
+            {level.boss ? t("👑 BOSS SEVİYESİ", "👑 BOSS LEVEL") : `${t("Seviye", "Level")} ${level.id} / ${LEVELS.length}`}
           </p>
-          <h2 className="truncate text-lg font-bold leading-tight md:text-2xl">{level.name}</h2>
+          <h2 className="truncate text-lg font-bold leading-tight md:text-2xl">{pick(level.name)}</h2>
         </div>
         <div className="flex shrink-0 gap-1.5 sm:gap-2">
-          <span className="card flex items-center !rounded-full px-3 py-1 font-display font-bold" title="Hamle sayısı">
+          <span className="card flex items-center !rounded-full px-3 py-1 font-display font-bold" title={t("Hamle sayısı", "Moves")}>
             👣 {moves}
           </span>
-          <button type="button" className="btn bg-white !px-3 !py-2" onClick={reset} aria-label="Sıfırla">
+          <button type="button" className="btn bg-white !px-3 !py-2" onClick={reset} aria-label={t("Sıfırla", "Reset")}>
             🔄
           </button>
         </div>
@@ -314,8 +324,8 @@ function LevelPlay({
         {/* the scale */}
         <div className={`card relative overflow-hidden p-2 sm:p-4 ${res.solved ? "bg-mint" : "bg-sky/60"}`}>
           <div className="mb-1 flex justify-between px-2 font-display text-sm font-bold text-ink-soft">
-            <span>Girenler (sol)</span>
-            <span>Ürünler (sağ)</span>
+            <span>{t("Girenler (sol)", "Reactants (left)")}</span>
+            <span>{t("Ürünler (sağ)", "Products (right)")}</span>
           </div>
           <Scale
             angle={angle}
@@ -329,7 +339,7 @@ function LevelPlay({
             left={(w, h) => <PanPile formulas={level.left} coefs={coefs.slice(0, nL)} w={w} h={h} />}
             right={(w, h) => <PanPile formulas={level.right} coefs={coefs.slice(nL)} w={w} h={h} />}
           />
-          <motion.p key={status.text} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`mx-auto mt-2 w-fit rounded-2xl px-4 py-2 text-center font-display font-bold ${status.cls}`} style={{ border: "3px solid #4a4063" }}>
+          <motion.p key={status.key} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`mx-auto mt-2 w-fit rounded-2xl px-4 py-2 text-center font-display font-bold ${status.cls}`} style={{ border: "3px solid #4a4063" }}>
             {status.text}
           </motion.p>
         </div>
@@ -340,9 +350,9 @@ function LevelPlay({
             <table className="w-full text-center">
               <thead className="bg-lavender font-display">
                 <tr>
-                  <th className="px-2 py-2 text-left">Atom</th>
-                  <th className="px-1">Sol</th>
-                  <th className="px-1">Sağ</th>
+                  <th className="px-2 py-2 text-left">{t("Atom", "Atom")}</th>
+                  <th className="px-1">{t("Sol", "Left")}</th>
+                  <th className="px-1">{t("Sağ", "Right")}</th>
                   <th className="px-1"></th>
                 </tr>
               </thead>
@@ -358,7 +368,7 @@ function LevelPlay({
                           <svg width="26" height="26" viewBox="-1.1 -1.1 2.2 2.2">
                             <Ball el={el} x={0} y={0} r={1} />
                           </svg>
-                          <span className="text-sm font-semibold">{ELEMENT_NAMES[el] ?? el}</span>
+                          <span className="text-sm font-semibold">{ELEMENT_NAMES[el] ? pick(ELEMENT_NAMES[el]) : el}</span>
                         </span>
                       </td>
                       <td className="font-display text-xl font-bold">
@@ -384,7 +394,7 @@ function LevelPlay({
             <div className="flex min-w-0 flex-1 flex-col gap-2">
               <AnimatePresence mode="wait">
                 <motion.p key={hint ? "h" : "n"} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl bg-white p-2 text-sm leading-snug" style={{ border: "2px solid #4a4063" }}>
-                  {hint ? level.hint : "Sadece büyük katsayıları değiştir. İndislere dokunmak yasak! 🚫"}
+                  {hint ? pick(level.hint) : t("Sadece büyük katsayıları değiştir. İndislere dokunmak yasak! 🚫", "Only change the big coefficients. Touching the subscripts is forbidden! 🚫")}
                 </motion.p>
               </AnimatePresence>
               {!hint && (
@@ -396,13 +406,13 @@ function LevelPlay({
                     setHint(true);
                   }}
                 >
-                  💡 İpucu (en çok 2⭐)
+                  💡 {t("İpucu (en çok 2⭐)", "Hint (max 2⭐)")}
                 </button>
               )}
             </div>
           </div>
           <p className="text-center text-xs text-ink-soft">
-            3⭐ için en az hamle: {minMoves(level)} · Katsayılar 1–{MAX_COEF}
+            {t("3⭐ için en az hamle", "Fewest moves for 3⭐")}: {minMoves(level)} · {t("Katsayılar", "Coefficients")} 1–{MAX_COEF}
           </p>
         </div>
       </div>
@@ -426,10 +436,11 @@ function CoefChip({
   disabled: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
   const btn = "flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full font-display text-2xl font-extrabold shadow-[0_3px_0_rgb(74_64_99/.3)] active:translate-y-0.5 active:shadow-none disabled:opacity-40 touch-manipulation";
   return (
     <div ref={ref} className={`flex flex-col items-center gap-1 rounded-3xl px-1 py-1.5 sm:px-1.5 ${side === "left" ? "bg-sky" : "bg-pink"}`}>
-      <button type="button" disabled={disabled} className={`${btn} bg-mint-deep`} style={{ border: "3px solid #4a4063" }} onClick={() => onChange(1, ref.current)} aria-label={`${formula} katsayısını artır`}>
+      <button type="button" disabled={disabled} className={`${btn} bg-mint-deep`} style={{ border: "3px solid #4a4063" }} onClick={() => onChange(1, ref.current)} aria-label={t(`${formula} katsayısını artır`, `Increase ${formula} coefficient`)}>
         +
       </button>
       <div className="flex flex-col items-center px-0.5 leading-none sm:flex-row sm:items-baseline sm:gap-0.5 sm:px-1">
@@ -438,7 +449,7 @@ function CoefChip({
         </motion.span>
         <span className="whitespace-nowrap font-display text-lg font-bold sm:text-xl">{pretty(formula)}</span>
       </div>
-      <button type="button" disabled={disabled || value <= 1} className={`${btn} bg-white`} style={{ border: "3px solid #4a4063" }} onClick={() => onChange(-1, ref.current)} aria-label={`${formula} katsayısını azalt`}>
+      <button type="button" disabled={disabled || value <= 1} className={`${btn} bg-white`} style={{ border: "3px solid #4a4063" }} onClick={() => onChange(-1, ref.current)} aria-label={t(`${formula} katsayısını azalt`, `Decrease ${formula} coefficient`)}>
         −
       </button>
     </div>
@@ -472,7 +483,13 @@ function WinModal({
   index: number;
 }) {
   const { play } = useSound();
-  const msg = stars === 3 ? "Kusursuz! Tam bir terazi ustasısın!" : stars === 2 ? "Çok iyi! Biraz daha az hamleyle 3 yıldız senin!" : "Dengeledin! Şimdi daha az hamleyle dene!";
+  const { t } = useLang();
+  const msg =
+    stars === 3
+      ? t("Kusursuz! Tam bir terazi ustasısın!", "Flawless! You're a true master of the scales!")
+      : stars === 2
+        ? t("Çok iyi! Biraz daha az hamleyle 3 yıldız senin!", "Great job! A few fewer moves and 3 stars are yours!")
+        : t("Dengeledin! Şimdi daha az hamleyle dene!", "Balanced! Now try it in fewer moves!");
   return createPortal(
     <motion.div className="fixed inset-0 z-40 flex items-center justify-center bg-ink/40 p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <motion.div initial={{ scale: 0.6, y: 40 }} animate={{ scale: 1, y: 0 }} transition={{ type: "spring", bounce: 0.5 }} className="card flex w-full max-w-md flex-col items-center gap-3 bg-mint p-6 text-center">
@@ -480,7 +497,7 @@ function WinModal({
           <Cat color={TEKIR.color} accent={TEKIR.accent} accessory={level.boss ? "crown" : "bowtie"} mood="love" size={100} />
           <Robo mood="excited" holding="none" size={96} />
         </div>
-        <h3 className="text-3xl font-extrabold">{level.boss ? "Boss yenildi! 👑" : "Dengede! ⚖️"}</h3>
+        <h3 className="text-3xl font-extrabold">{level.boss ? t("Boss yenildi! 👑", "Boss defeated! 👑") : t("Dengede! ⚖️", "Balanced! ⚖️")}</h3>
         <div className="flex gap-2 text-5xl">
           {[0, 1, 2].map((k) => (
             <motion.span
@@ -499,17 +516,17 @@ function WinModal({
           {equationText(level, coefs)}
         </p>
         <p className="text-ink-soft">
-          {moves} hamle · {msg}
+          {moves} {t("hamle", moves === 1 ? "move" : "moves")} · {msg}
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           <button type="button" className="btn bg-white" onClick={() => (play("click"), onReplay())}>
-            🔁 Tekrar
+            🔁 {t("Tekrar", "Replay")}
           </button>
           <button type="button" className="btn bg-white" onClick={() => (play("click"), onMap())}>
-            🗺️ Harita
+            🗺️ {t("Harita", "Map")}
           </button>
           <button type="button" className="btn bg-pink-deep" onClick={() => (play("click"), onNext())}>
-            {isLast ? "Quiz'e geç ❓" : "Sonraki Seviye →"}
+            {isLast ? t("Quiz'e geç ❓", "Go to the quiz ❓") : t("Sonraki Seviye →", "Next Level →")}
           </button>
         </div>
       </motion.div>

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Fragment } from "react";
+import { useLang } from "@/lib/i18n";
 import { ATOMIC_MASS, elementOrder, pretty, sideCounts } from "./chem";
 import Molecule, { Ball } from "./Molecule";
 
@@ -68,34 +69,51 @@ function MiniScale({ tilt }: { tilt: number }) {
   return (
     <svg width="54" height="34" viewBox="0 0 54 34" aria-hidden>
       <path d="M27 12 L19 32 L35 32 Z" fill="#b69cff" stroke={INK} strokeWidth={2} />
-      <motion.g initial={{ rotate: 0 }} animate={{ rotate: tilt }} transition={{ type: "spring", stiffness: 60, damping: 6 }} style={{ originX: "27px", originY: "12px" }}>
+      {/* pivot at (27,12) in viewBox coords — view-box transform box, not the group's bbox */}
+      <g
+        style={{
+          transformBox: "view-box",
+          transformOrigin: "27px 12px",
+          transform: `rotate(${tilt}deg)`,
+          transition: "transform 0.9s cubic-bezier(.34,1.8,.5,1)",
+        }}
+      >
         <rect x="3" y="9" width="48" height="6" rx="3" fill={tilt === 0 ? "#7fdcb8" : "#ffe066"} stroke={INK} strokeWidth={2} />
         <circle cx="7" cy="6" r="3.5" fill="#8cc8ff" stroke={INK} strokeWidth={1.5} />
         <circle cx="47" cy="6" r="3.5" fill="#ff9ebb" stroke={INK} strokeWidth={1.5} />
-      </motion.g>
+      </g>
     </svg>
   );
 }
 
 /** "Index vs coefficient" comparison card. */
 export function IndexVisual() {
+  const { t, lang } = useLang();
   return (
     <div className="grid grid-cols-2 gap-3">
       <div className="flex flex-col items-center gap-1 rounded-2xl bg-mint p-3" style={{ border: `2px solid ${INK}` }}>
         <Molecule formula="H2O" unit={20} />
         <span className="font-display text-xl font-bold">H₂O</span>
-        <span className="text-sm">Su 💧</span>
+        <span className="text-sm">{t("Su", "Water")} 💧</span>
       </div>
       <div className="relative flex flex-col items-center gap-1 rounded-2xl bg-pink p-3" style={{ border: `2px solid ${INK}` }}>
         <Molecule formula="H2O2" unit={20} />
         <span className="font-display text-xl font-bold">H₂O₂</span>
-        <span className="text-sm">Hidrojen peroksit 🧴</span>
+        <span className="text-center text-sm">{t("Hidrojen peroksit", "Hydrogen peroxide")} 🧴</span>
         <motion.span initial={{ scale: 3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3 }} className="absolute -right-2 -top-3 text-4xl">
           🚫
         </motion.span>
       </div>
       <p className="col-span-2 text-center text-sm">
-        Küçük sayı = <b>indis</b> (maddenin kimliği, dokunma!) · Büyük sayı = <b>katsayı</b> (kaç tane molekül)
+        {lang === "en" ? (
+          <>
+            Small number = <b>subscript</b> (the substance&apos;s identity, don&apos;t touch!) · Big number = <b>coefficient</b> (how many molecules)
+          </>
+        ) : (
+          <>
+            Küçük sayı = <b>indis</b> (maddenin kimliği, dokunma!) · Büyük sayı = <b>katsayı</b> (kaç tane molekül)
+          </>
+        )}
       </p>
     </div>
   );
@@ -122,11 +140,12 @@ export function CoefVisual() {
 }
 
 export function StepsVisual() {
+  const { t } = useLang();
   const steps = [
-    ["🧩", "En karmaşık (en çok atomlu) molekülden başla."],
-    ["⚙️", "Metalleri ve diğer atomları eşitle."],
-    ["💧", "H ve O atomlarını sona bırak."],
-    ["✂️", "Katsayıları en küçük tam sayılara sadeleştir."],
+    ["🧩", t("En karmaşık (en çok atomlu) molekülden başla.", "Start with the most complex molecule (the one with the most atoms).")],
+    ["⚙️", t("Metalleri ve diğer atomları eşitle.", "Balance the metals and other atoms.")],
+    ["💧", t("H ve O atomlarını sona bırak.", "Leave H and O atoms until last.")],
+    ["✂️", t("Katsayıları en küçük tam sayılara sadeleştir.", "Simplify to the smallest whole-number coefficients.")],
   ];
   return (
     <ol className="grid gap-2 sm:grid-cols-2">
@@ -150,7 +169,12 @@ export function SplashSeesaw() {
     <svg viewBox="0 0 320 170" className="w-[min(88vw,420px)]" aria-hidden>
       <ellipse cx="160" cy="160" rx="120" ry="8" fill="#4a4063" opacity={0.12} />
       <path d="M160 92 L128 158 L192 158 Z" fill="#b69cff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
-      <motion.g style={{ originX: "160px", originY: "92px" }} animate={{ rotate: [-10, 10, -10] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}>
+      <style>{`
+        .denk-seesaw { transform-box: view-box; transform-origin: 160px 92px; animation: denk-seesaw 2.4s ease-in-out infinite; }
+        @keyframes denk-seesaw { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
+        @media (prefers-reduced-motion: reduce) { .denk-seesaw { animation: none; } }
+      `}</style>
+      <g className="denk-seesaw">
         <rect x="20" y="84" width="280" height="16" rx="8" fill="#ffe066" stroke={INK} strokeWidth={4} />
         {/* left: H2 + H2 + O2 */}
         <g transform="translate(58 62)">
@@ -170,7 +194,7 @@ export function SplashSeesaw() {
           <Ball el="H" x={6} y={10} r={9} />
           <Ball el="H" x={32} y={10} r={9} />
         </g>
-      </motion.g>
+      </g>
       <circle cx="160" cy="92" r="8" fill="#ff9ebb" stroke={INK} strokeWidth={3} />
     </svg>
   );

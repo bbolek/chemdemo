@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { motion, useMotionValueEvent, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 const INK = "#4a4063";
@@ -100,12 +100,15 @@ export default function Scale({ angle, left, right, balanced, topper, panHeight 
 }
 
 function Needle({ rotate, balanced }: { rotate: MotionValue<number>; balanced: boolean }) {
-  const r = useTransform(rotate, (a) => a * 3);
+  // Drive an SVG transform attribute so the needle pivots on (42,42) in viewBox coords
+  // (framer's originX/originY on SVG is relative to the element's own bbox).
+  const [deg, setDeg] = useState(() => rotate.get() * 3);
+  useMotionValueEvent(rotate, "change", (a) => setDeg(a * 3));
   return (
-    <motion.g style={{ rotate: r, originX: "42px", originY: "42px" }}>
+    <g transform={`rotate(${deg} 42 42)`}>
       <line x1="42" y1="42" x2="42" y2="10" stroke={balanced ? "#3fb58a" : "#ff6f91"} strokeWidth={4} strokeLinecap="round" />
       <circle cx="42" cy="42" r="5" fill={INK} />
-    </motion.g>
+    </g>
   );
 }
 

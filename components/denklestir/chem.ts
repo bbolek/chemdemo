@@ -1,3 +1,5 @@
+import type { Localized } from "@/lib/i18n";
+
 /** Formula parsing + balancing logic for "Denkleştir Bakalım!" */
 
 export type Counts = Record<string, number>;
@@ -65,8 +67,8 @@ export interface Level {
   right: string[];
   /** Correct smallest-integer coefficients (left then right) */
   solution: number[];
-  name: string;
-  hint: string;
+  name: Localized<string>;
+  hint: Localized<string>;
   boss?: boolean;
 }
 
@@ -106,83 +108,83 @@ export function starsFor(lv: Level, moves: number, hintUsed: boolean) {
 export const LEVELS: Level[] = [
   {
     id: 1,
-    name: "Su Damlası",
+    name: { tr: "Su Damlası", en: "Water Droplet" },
     left: ["H2", "O2"],
     right: ["H2O"],
     solution: [2, 1, 2],
-    hint: "Solda 2 O var, sağda 1. Önce H₂O'nun katsayısını 2 yap, sonra H'leri say!",
+    hint: { tr: "Solda 2 O var, sağda 1. Önce H₂O'nun katsayısını 2 yap, sonra H'leri say!", en: "There are 2 O on the left but only 1 on the right. Make H₂O's coefficient 2 first, then count the H atoms!" },
   },
   {
     id: 2,
-    name: "Sofra Tuzu",
+    name: { tr: "Sofra Tuzu", en: "Table Salt" },
     left: ["Na", "Cl2"],
     right: ["NaCl"],
     solution: [2, 1, 2],
-    hint: "Cl₂'de 2 klor var. NaCl'den 2 tane yaparsan kaç Na gerekir?",
+    hint: { tr: "Cl₂'de 2 klor var. NaCl'den 2 tane yaparsan kaç Na gerekir?", en: "Cl₂ has 2 chlorine atoms. If you make 2 NaCl, how many Na do you need?" },
   },
   {
     id: 3,
-    name: "Parlak Magnezyum",
+    name: { tr: "Parlak Magnezyum", en: "Shiny Magnesium" },
     left: ["Mg", "O2"],
     right: ["MgO"],
     solution: [2, 1, 2],
-    hint: "O₂ molekülünde 2 oksijen var, MgO'da sadece 1. MgO'yu çoğalt, sonra Mg'yi eşitle.",
+    hint: { tr: "O₂ molekülünde 2 oksijen var, MgO'da sadece 1. MgO'yu çoğalt, sonra Mg'yi eşitle.", en: "An O₂ molecule has 2 oxygens, but MgO has only 1. Make more MgO, then balance the Mg." },
   },
   {
     id: 4,
-    name: "Amonyak Fabrikası",
+    name: { tr: "Amonyak Fabrikası", en: "Ammonia Factory" },
     left: ["N2", "H2"],
     right: ["NH3"],
     solution: [1, 3, 2],
-    hint: "Azotla başla: N₂'de 2 N var → 2 NH₃ lazım. Şimdi sağda 6 H oldu; H₂'den kaç tane gerekir?",
+    hint: { tr: "Azotla başla: N₂'de 2 N var → 2 NH₃ lazım. Şimdi sağda 6 H oldu; H₂'den kaç tane gerekir?", en: "Start with nitrogen: N₂ has 2 N → you need 2 NH₃. Now there are 6 H on the right; how many H₂ do you need?" },
   },
   {
     id: 5,
-    name: "Oksijen Balonu",
+    name: { tr: "Oksijen Balonu", en: "Oxygen Balloon" },
     left: ["KClO3"],
     right: ["KCl", "O2"],
     solution: [2, 2, 3],
-    hint: "Solda 3 O (tek sayı), sağda O₂ (çift). KClO₃'ün önüne 2 yazarak O'yu çift yap: 6 O → 3 O₂.",
+    hint: { tr: "Solda 3 O (tek sayı), sağda O₂ (çift). KClO₃'ün önüne 2 yazarak O'yu çift yap: 6 O → 3 O₂.", en: "3 O on the left (odd), O₂ on the right (even). Put a 2 in front of KClO₃ to make the O even: 6 O → 3 O₂." },
   },
   {
     id: 6,
-    name: "Doğal Gaz Ocağı",
+    name: { tr: "Doğal Gaz Ocağı", en: "Gas Stove" },
     left: ["CH4", "O2"],
     right: ["CO2", "H2O"],
     solution: [1, 2, 1, 2],
-    hint: "En karmaşık molekül CH₄. 1 C → 1 CO₂; 4 H → 2 H₂O. Oksijeni en sona bırak!",
+    hint: { tr: "En karmaşık molekül CH₄. 1 C → 1 CO₂; 4 H → 2 H₂O. Oksijeni en sona bırak!", en: "The most complex molecule is CH₄. 1 C → 1 CO₂; 4 H → 2 H₂O. Leave oxygen for last!" },
   },
   {
     id: 7,
-    name: "Kireç Suyu",
+    name: { tr: "Kireç Suyu", en: "Limewater" },
     left: ["Ca(OH)2", "HCl"],
     right: ["CaCl2", "H2O"],
     solution: [1, 2, 1, 2],
-    hint: "Parantez dikkat! Ca(OH)₂ = 1 Ca, 2 O, 2 H. CaCl₂'de 2 Cl var → HCl'den 2 tane lazım.",
+    hint: { tr: "Parantez dikkat! Ca(OH)₂ = 1 Ca, 2 O, 2 H. CaCl₂'de 2 Cl var → HCl'den 2 tane lazım.", en: "Watch the brackets! Ca(OH)₂ = 1 Ca, 2 O, 2 H. CaCl₂ has 2 Cl → you need 2 HCl." },
   },
   {
     id: 8,
-    name: "Alüminyum Folyo",
+    name: { tr: "Alüminyum Folyo", en: "Aluminium Foil" },
     left: ["Al", "O2"],
     right: ["Al2O3"],
     solution: [4, 3, 2],
-    hint: "O sayıları 2 ve 3. İkisinin ortak katı 6! 3 O₂ → 6 O → 2 Al₂O₃. Sonra Al'ı say.",
+    hint: { tr: "O sayıları 2 ve 3. İkisinin ortak katı 6! 3 O₂ → 6 O → 2 Al₂O₃. Sonra Al'ı say.", en: "The O counts are 2 and 3. Their lowest common multiple is 6! 3 O₂ → 6 O → 2 Al₂O₃. Then count the Al." },
   },
   {
     id: 9,
-    name: "Paslı Çivi",
+    name: { tr: "Paslı Çivi", en: "Rusty Nail" },
     left: ["Fe", "O2"],
     right: ["Fe2O3"],
     solution: [4, 3, 2],
-    hint: "Tıpkı alüminyum gibi! Oksijen için 2 ve 3'ün ortak katı 6'yı hedefle.",
+    hint: { tr: "Tıpkı alüminyum gibi! Oksijen için 2 ve 3'ün ortak katı 6'yı hedefle.", en: "Just like aluminium! For oxygen, aim for 6, the lowest common multiple of 2 and 3." },
   },
   {
     id: 10,
-    name: "Mangal Tüpü",
+    name: { tr: "Mangal Tüpü", en: "BBQ Gas Tank" },
     left: ["C3H8", "O2"],
     right: ["CO2", "H2O"],
     solution: [1, 5, 3, 4],
-    hint: "C₃H₈ ile başla: 3 C → 3 CO₂; 8 H → 4 H₂O. Sağdaki O'ları topla (6 + 4 = 10) → kaç O₂?",
+    hint: { tr: "C₃H₈ ile başla: 3 C → 3 CO₂; 8 H → 4 H₂O. Sağdaki O'ları topla (6 + 4 = 10) → kaç O₂?", en: "Start with C₃H₈: 3 C → 3 CO₂; 8 H → 4 H₂O. Add up the O on the right (6 + 4 = 10) → how many O₂?" },
     boss: true,
   },
 ];
