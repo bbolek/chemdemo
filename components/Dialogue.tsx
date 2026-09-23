@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 import { useSound } from "@/lib/sound";
+import { useLang } from "@/lib/i18n";
 
 export interface Speaker {
   name: string;
@@ -32,7 +33,8 @@ interface Props {
  * Story-mode dialogue. Characters stand on the sides, typewriter text in a bubble.
  * Click "Devam" (or the bubble) to advance.
  */
-export default function Dialogue({ speakers, lines, onDone, doneLabel = "Hadi oynayalım! 🎮" }: Props) {
+export default function Dialogue({ speakers, lines, onDone, doneLabel }: Props) {
+  const { t } = useLang();
   const [i, setI] = useState(0);
   const [shown, setShown] = useState(0);
   const { play } = useSound();
@@ -116,11 +118,11 @@ export default function Dialogue({ speakers, lines, onDone, doneLabel = "Hadi oy
         <div className="flex gap-2">
           {i > 0 && (
             <button type="button" className="btn whitespace-nowrap bg-white" onClick={() => (play("click"), setI(i - 1))}>
-              ← Geri
+              ← {t("Geri", "Back")}
             </button>
           )}
           <button type="button" className="btn whitespace-nowrap bg-lemon-deep" onClick={next}>
-            {i < lines.length - 1 ? "Devam →" : doneLabel}
+            {i < lines.length - 1 ? t("Devam →", "Next →") : (doneLabel ?? t("Hadi oynayalım! 🎮", "Let's play! 🎮"))}
           </button>
         </div>
       </div>

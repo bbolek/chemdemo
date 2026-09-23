@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSound } from "@/lib/sound";
 import { celebrate } from "@/lib/confetti";
 import Cat from "./Cat";
+import { useLang } from "@/lib/i18n";
 
 export interface QuizQuestion {
   q: string;
@@ -28,6 +29,7 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
   const { play } = useSound();
+  const { t } = useLang();
 
   const q = questions[i];
 
@@ -72,10 +74,14 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
           {score} / {questions.length}
         </h3>
         <p className="text-lg">
-          {ratio === 1 ? "Mükemmel! Sen tam bir kimya kedisisin! 🏆" : ratio >= 0.6 ? "Harika iş! Biraz daha pratikle zirvedesin! ✨" : "Olsun, tekrar deneyelim! Hata yapmak da öğrenmenin parçası 💪"}
+          {ratio === 1
+            ? t("Mükemmel! Sen tam bir kimya kedisisin! 🏆", "Perfect! You are a true chemistry cat! 🏆")
+            : ratio >= 0.6
+              ? t("Harika iş! Biraz daha pratikle zirvedesin! ✨", "Great job! A bit more practice and you're at the top! ✨")
+              : t("Olsun, tekrar deneyelim! Hata yapmak da öğrenmenin parçası 💪", "No worries, let's try again! Mistakes are part of learning 💪")}
         </p>
         <button type="button" className="btn bg-mint-deep" onClick={restart}>
-          Tekrar Dene 🔁
+          {t("Tekrar Dene 🔁", "Try Again 🔁")}
         </button>
       </motion.div>
     );
@@ -87,7 +93,7 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <div className="flex items-center justify-between font-display font-bold text-ink-soft">
         <span>
-          Soru {i + 1} / {questions.length}
+          {t("Soru", "Question")} {i + 1} / {questions.length}
         </span>
         <span>⭐ {score}</span>
       </div>
@@ -123,11 +129,11 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 flex items-center gap-3">
               <Cat color={catColor} mood={correct ? "happy" : "sad"} size={80} bounce={false} />
               <div className="flex-1">
-                <p className="font-display text-lg font-bold">{correct ? "Doğru! 🎉" : "Hmm, olmadı 🙀"}</p>
+                <p className="font-display text-lg font-bold">{correct ? t("Doğru! 🎉", "Correct! 🎉") : t("Hmm, olmadı 🙀", "Hmm, not quite 🙀")}</p>
                 <p>{q.explain}</p>
               </div>
               <button type="button" className="btn bg-lemon-deep" onClick={next}>
-                {i < questions.length - 1 ? "Sonraki →" : "Sonuç 🏁"}
+                {i < questions.length - 1 ? t("Sonraki →", "Next →") : t("Sonuç 🏁", "Results 🏁")}
               </button>
             </motion.div>
           )}

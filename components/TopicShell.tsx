@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, type ReactNode } from "react";
 import { useSound } from "@/lib/sound";
 import MuteButton from "./MuteButton";
+import LangSwitch from "./LangSwitch";
+import { useLang } from "@/lib/i18n";
 
 export interface Stage {
   key: string;
@@ -29,6 +31,7 @@ export default function TopicShell({ title, subtitle, emoji, color, stages, spla
   const [started, setStarted] = useState(!splash);
   const [active, setActive] = useState(stages[0].key);
   const { play } = useSound();
+  const { t } = useLang();
 
   const goTo = (key: string) => {
     play("whoosh");
@@ -40,18 +43,21 @@ export default function TopicShell({ title, subtitle, emoji, color, stages, spla
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-4 px-4 py-4 md:py-6">
-      <header className="flex items-center justify-between gap-3">
-        <Link href="/" className="btn bg-white !px-4" onClick={() => play("click")}>
-          ← <span className="hidden sm:inline">Ana Sayfa</span>
+      <header className="flex items-center justify-between gap-2 sm:gap-3">
+        <Link href="/" className="btn shrink-0 bg-white !px-3 sm:!px-4" onClick={() => play("click")}>
+          ← <span className="hidden sm:inline">{t("Ana Sayfa", "Home")}</span>
         </Link>
-        <div className={`card flex items-center gap-2 px-4 py-2 ${color}`}>
-          <span className="text-2xl">{emoji}</span>
-          <div className="leading-tight">
-            <h1 className="text-lg font-bold md:text-2xl">{title}</h1>
+        <div className={`card flex min-w-0 items-center gap-2 px-3 py-2 sm:px-4 ${color}`}>
+          <span className="hidden text-2xl sm:inline">{emoji}</span>
+          <div className="min-w-0 leading-tight">
+            <h1 className="truncate text-base font-bold sm:text-lg md:text-2xl">{title}</h1>
             {subtitle && <p className="hidden text-sm text-ink-soft sm:block">{subtitle}</p>}
           </div>
         </div>
-        <MuteButton />
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <LangSwitch />
+          <MuteButton />
+        </div>
       </header>
 
       {!started && splash ? (

@@ -55,7 +55,7 @@ export default function Robo({
       animate={bounce ? { y: [0, -5, 0] } : undefined}
       transition={bounce ? { duration: 2.6, repeat: Infinity, ease: "easeInOut" } : undefined}
     >
-      <svg viewBox="0 0 200 240" width="100%" height="100%" aria-hidden>
+      <svg viewBox="0 0 200 240" width="100%" height="100%" overflow="visible" aria-hidden>
         {/* antenna */}
         <line x1="100" y1="30" x2="100" y2="10" stroke={INK} strokeWidth={4} />
         <motion.circle
@@ -123,15 +123,11 @@ export default function Robo({
         <line x1="124" y1="152" x2="124" y2="164" stroke="#ff9ebb" strokeWidth={4} strokeLinecap="round" />
 
         {/* left arm waving */}
-        <motion.g
-          style={{ originX: "58px", originY: "138px" }}
-          animate={talking ? { rotate: [0, -18, 0] } : { rotate: 0 }}
-          transition={{ duration: 0.8, repeat: talking ? Infinity : 0 }}
-        >
+        <g className={talking ? "robo-wave" : undefined}>
           <path d="M58 138 Q34 160 36 184" stroke={INK} strokeWidth={16} fill="none" strokeLinecap="round" />
           <path d="M58 138 Q34 160 36 184" stroke="white" strokeWidth={10} fill="none" strokeLinecap="round" />
           <circle cx="36" cy="190" r="10" fill="#e8dcff" stroke={INK} strokeWidth={3} />
-        </motion.g>
+        </g>
 
         {/* right arm with item */}
         <path d="M142 138 Q166 160 164 184" stroke={INK} strokeWidth={16} fill="none" strokeLinecap="round" />

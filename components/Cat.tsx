@@ -63,28 +63,12 @@ export default function Cat({
       animate={bounce ? { y: [0, -6, 0] } : undefined}
       transition={bounce ? { duration: 2.2, repeat: Infinity, ease: "easeInOut" } : undefined}
     >
-      <svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden>
+      <svg viewBox="0 0 200 200" width="100%" height="100%" overflow="visible" aria-hidden>
         {/* tail */}
-        <motion.path
-          d="M150 160 C 190 150, 190 105, 170 95"
-          fill="none"
-          stroke={INK}
-          strokeWidth={16}
-          strokeLinecap="round"
-          style={{ originX: "150px", originY: "160px" }}
-          animate={{ rotate: [0, 10, -4, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.path
-          d="M150 160 C 190 150, 190 105, 170 95"
-          fill="none"
-          stroke={color}
-          strokeWidth={10}
-          strokeLinecap="round"
-          style={{ originX: "150px", originY: "160px" }}
-          animate={{ rotate: [0, 10, -4, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        />
+        <g className="cat-tail">
+          <path d="M140 160 C 184 152, 186 110, 168 98" fill="none" stroke={INK} strokeWidth={16} strokeLinecap="round" />
+          <path d="M140 160 C 184 152, 186 110, 168 98" fill="none" stroke={color} strokeWidth={10} strokeLinecap="round" />
+        </g>
 
         {/* body */}
         <ellipse cx="100" cy="158" rx="52" ry="36" fill={color} stroke={INK} strokeWidth={4} />

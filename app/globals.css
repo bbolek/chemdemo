@@ -92,6 +92,27 @@ h3,
 
 }
 
+/* SVG part animations — pivot in viewBox coordinates (framer-motion's originX uses the element bbox) */
+.cat-tail {
+  transform-box: view-box;
+  transform-origin: 140px 160px;
+  animation: cat-tail-wag 1.8s ease-in-out infinite;
+}
+@keyframes cat-tail-wag {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(8deg); }
+  70% { transform: rotate(-5deg); }
+}
+.robo-wave {
+  transform-box: view-box;
+  transform-origin: 58px 138px;
+  animation: robo-wave 0.8s ease-in-out infinite;
+}
+@keyframes robo-wave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(18deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

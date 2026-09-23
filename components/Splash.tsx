@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { useLang } from "@/lib/i18n";
 
 interface Props {
   title: string;
@@ -15,7 +16,8 @@ interface Props {
 }
 
 /** Big animated intro screen for a topic ("splash"). Floating bubbles + bouncy title. */
-export default function Splash({ title, tagline, children, onStart, color = "bg-lavender", startLabel = "Başla! 🚀" }: Props) {
+export default function Splash({ title, tagline, children, onStart, color = "bg-lavender", startLabel }: Props) {
+  const { t } = useLang();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -48,7 +50,7 @@ export default function Splash({ title, tagline, children, onStart, color = "bg-
         animate={{ scale: [1, 1.07, 1] }}
         transition={{ duration: 1.4, repeat: Infinity }}
       >
-        {startLabel}
+        {startLabel ?? t("Başla! 🚀", "Start! 🚀")}
       </motion.button>
     </motion.div>
   );
