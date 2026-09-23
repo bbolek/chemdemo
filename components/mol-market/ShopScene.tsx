@@ -99,8 +99,8 @@ function Counter() {
   return (
     <svg viewBox={`0 0 ${VW} ${VH}`} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
       <IsoBox P={P} x={0.6} y={3.3} z={0} dx={2.8} dy={0.8} dz={1.1} top="#fff5b8" left="#b69cff" right="#a58af2" />
-      <Face P={P} p={[[0.8, 4.1, 0.3], [3.2, 4.1, 0.3], [3.2, 4.1, 0.8], [0.8, 4.1, 0.8]]} fill="#e8dcff" sw={2} />
-      <text transform={onPlaneY(P(2.0, 4.1, 0.43))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={12} fill={INK}>
+      <Face P={P} p={[[0.8, 4.1, 0.3], [2.6, 4.1, 0.3], [2.6, 4.1, 0.8], [0.8, 4.1, 0.8]]} fill="#e8dcff" sw={2} />
+      <text transform={onPlaneY(P(1.7, 4.1, 0.43))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={12} fill={INK}>
         {t("KASA 🧺", "TILL 🧺", "KASSE 🧺")}
       </text>
       {/* cash register */}
@@ -150,7 +150,7 @@ export default function ShopScene({ customer, customerKey, customerMood, minnosM
   const [ref, w] = useWidth();
   const u = w / VW;
   const door = P(4.55, 0.4);
-  const spot = P(3.95, 4.65);
+  const spot = P(4.95, 3.9);
   const exit = P(5.5, 7.5);
 
   return (
