@@ -36,7 +36,7 @@ interface Cfg {
 }
 
 function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
-  const t = (tr: string, en: string) => (lang === "en" ? en : tr);
+  const t = (tr: string, en: string, de: string) => (lang === "en" ? en : lang === "de" ? de : tr);
   const nRT = s.n * R * s.T;
   if (mode === "charles") {
     const k = (s.n * R) / s.Pfix;
@@ -46,16 +46,16 @@ function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
         return { x: t, y: k * t };
       });
     return {
-      title: t("V – T grafiği (doğru!)", "V – T graph (straight line!)"),
-      xLabel: t("Sıcaklık T (K)", "Temperature T (K)"),
-      yLabel: t("Hacim V (L)", "Volume V (L)"),
+      title: t("V – T grafiği (doğru!)", "V – T graph (straight line!)", "V-T-Diagramm (Gerade!)"),
+      xLabel: t("Sıcaklık T (K)", "Temperature T (K)", "Temperatur T (K)"),
+      yLabel: t("Hacim V (L)", "Volume V (L)", "Volumen V (L)"),
       xMax: TMAX,
       yMax: VMAX,
       x: s.T,
       y: s.V,
       curve: pts(100, TMAX),
       dashed: pts(0, 100),
-      note: t("Doğru 0 K'e (−273 °C) uzanır", "The line extends to 0 K (−273 °C)"),
+      note: t("Doğru 0 K'e (−273 °C) uzanır", "The line extends to 0 K (−273 °C)", "Die Gerade führt bis 0 K (−273 °C)"),
       xDec: 0,
       yDec: 1,
     };
@@ -64,9 +64,9 @@ function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
     const k = (s.n * R) / s.V;
     const yMax = niceCeil(k * TMAX * 1.05);
     return {
-      title: t("P – T grafiği", "P – T graph"),
-      xLabel: t("Sıcaklık T (K)", "Temperature T (K)"),
-      yLabel: t("Basınç P (atm)", "Pressure P (atm)"),
+      title: t("P – T grafiği", "P – T graph", "P-T-Diagramm"),
+      xLabel: t("Sıcaklık T (K)", "Temperature T (K)", "Temperatur T (K)"),
+      yLabel: t("Basınç P (atm)", "Pressure P (atm)", "Druck P (atm)"),
       xMax: TMAX,
       yMax,
       x: s.T,
@@ -79,7 +79,7 @@ function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
         { x: 0, y: 0 },
         { x: 100, y: k * 100 },
       ],
-      note: t("P / T = sabit", "P / T = constant"),
+      note: t("P / T = sabit", "P / T = constant", "P / T = konstant"),
       xDec: 0,
       yDec: 1,
     };
@@ -88,9 +88,9 @@ function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
     const k = (R * s.T) / s.Pfix;
     const nMax = CAT_MAX * MOL_PER_CAT;
     return {
-      title: t("V – n grafiği", "V – n graph"),
-      xLabel: t("Mol sayısı n (mol)", "Amount n (mol)"),
-      yLabel: t("Hacim V (L)", "Volume V (L)"),
+      title: t("V – n grafiği", "V – n graph", "V-n-Diagramm"),
+      xLabel: t("Mol sayısı n (mol)", "Amount n (mol)", "Stoffmenge n (mol)"),
+      yLabel: t("Hacim V (L)", "Volume V (L)", "Volumen V (L)"),
       xMax: nMax,
       yMax: VMAX,
       x: s.n,
@@ -99,7 +99,7 @@ function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
         { x: 0, y: 0 },
         { x: nMax, y: k * nMax },
       ],
-      note: t("V / n = sabit", "V / n = constant"),
+      note: t("V / n = sabit", "V / n = constant", "V / n = konstant"),
       xDec: 1,
       yDec: 1,
     };
@@ -109,15 +109,15 @@ function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
   const curve: GasPoint[] = [];
   for (let v = VMIN; v <= VMAX + 1e-9; v += 0.25) curve.push({ x: v, y: nRT / v });
   return {
-    title: mode === "boyle" ? t("P – V grafiği (hiperbol)", "P – V graph (hyperbola)") : t("P – V grafiği", "P – V graph"),
-    xLabel: t("Hacim V (L)", "Volume V (L)"),
-    yLabel: t("Basınç P (atm)", "Pressure P (atm)"),
+    title: mode === "boyle" ? t("P – V grafiği (hiperbol)", "P – V graph (hyperbola)", "P-V-Diagramm (Hyperbel)") : t("P – V grafiği", "P – V graph", "P-V-Diagramm"),
+    xLabel: t("Hacim V (L)", "Volume V (L)", "Volumen V (L)"),
+    yLabel: t("Basınç P (atm)", "Pressure P (atm)", "Druck P (atm)"),
     xMax: VMAX,
     yMax,
     x: s.V,
     y: s.P,
     curve,
-    note: mode === "boyle" ? t("P · V = sabit", "P · V = constant") : `${t("Eğri", "Curve")}: ${fmt(s.n, 1, lang)} mol, ${Math.round(s.T)} K`,
+    note: mode === "boyle" ? t("P · V = sabit", "P · V = constant", "P · V = konstant") : `${t("Eğri", "Curve", "Kurve")}: ${fmt(s.n, 1, lang)} mol, ${Math.round(s.T)} K`,
     xDec: 1,
     yDec: 1,
   };

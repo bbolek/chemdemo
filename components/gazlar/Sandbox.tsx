@@ -19,7 +19,7 @@ export default function Sandbox({ onNext }: { onNext: () => void }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label={t("Gaz yasası seç", "Choose a gas law")}>
+      <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label={t("Gaz yasası seç", "Choose a gas law", "Gasgesetz wählen")}>
         {MODES.map((m) => (
           <button
             key={m.key}
@@ -54,7 +54,7 @@ export default function Sandbox({ onNext }: { onNext: () => void }) {
             </div>
             <p className="text-sm md:text-base">{pick(info.idea)}</p>
             <p className="mt-1 text-sm text-ink-soft">
-              <b>{t("Günlük hayatta:", "In everyday life:")}</b> {pick(info.example)}
+              <b>{t("Günlük hayatta:", "In everyday life:", "Im Alltag:")}</b> {pick(info.example)}
             </p>
           </div>
         </motion.div>
@@ -71,10 +71,10 @@ export default function Sandbox({ onNext }: { onNext: () => void }) {
             api.reset({ T: 300, cats: 10, V: 6 });
           }}
         >
-          {t("🔄 Sıfırla", "🔄 Reset")}
+          {t("🔄 Sıfırla", "🔄 Reset", "🔄 Zurücksetzen")}
         </button>
         <button type="button" className="btn bg-lemon-deep" onClick={onNext}>
-          {t("Görevlere geç! 🏆", "On to the missions! 🏆")}
+          {t("Görevlere geç! 🏆", "On to the missions! 🏆", "Auf zu den Missionen! 🏆")}
         </button>
       </div>
     </div>
