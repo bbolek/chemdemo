@@ -127,4 +127,67 @@ const EN: QuizQuestion[] = [
   },
 ];
 
-export const QUESTIONS: Localized<QuizQuestion[]> = { tr: TR, en: EN };
+const DE: QuizQuestion[] = [
+  {
+    q: "Was passiert laut kinetischer Gastheorie, wenn man die Temperatur eines Gases erhöht?",
+    options: ["Die mittlere Geschwindigkeit der Teilchen sinkt", "Mittlere Geschwindigkeit und kinetische Energie der Teilchen steigen", "Die Teilchen bleiben stehen", "Die Masse der Teilchen nimmt zu"],
+    answer: 1,
+    explain: "Die Temperatur ist ein Maß für die mittlere kinetische Energie der Teilchen. Wird es wärmer, flitzen die Kätzchen schneller!",
+  },
+  {
+    q: "Wodurch entsteht der Druck eines Gases in einem geschlossenen Gefäß?",
+    options: ["Dadurch, dass sich die Teilchen gegenseitig anziehen", "Durch die Farbe des Gases", "Durch Stöße der Teilchen gegen die Gefäßwände", "Durch das Gewicht des Gefäßes"],
+    answer: 2,
+    explain: "Druck entsteht durch die Kraft, die die Teilchen beim Aufprall auf die Gefäßwände ausüben. Mehr Stöße → höherer Druck.",
+  },
+  {
+    q: "Bei konstanter Temperatur hat ein Gas mit 6 L Volumen einen Druck von 2 atm. Wie groß ist der Druck, wenn das Volumen auf 3 L verkleinert wird?",
+    options: ["1 atm", "2 atm", "4 atm", "6 atm"],
+    answer: 2,
+    explain: "Boyle-Mariotte: P₁·V₁ = P₂·V₂ → 2 · 6 = P₂ · 3 → P₂ = 4 atm. Das Volumen wurde halbiert, also hat sich der Druck verdoppelt.",
+  },
+  {
+    q: "Bei konstantem Druck werden 4 L Gas von 27 °C auf 127 °C erwärmt. Wie groß ist das neue Volumen?",
+    options: ["4,7 L", "5,33 L", "18,8 L", "3 L"],
+    answer: 1,
+    explain: "Charles: erst in Kelvin umrechnen! 27 °C = 300 K, 127 °C = 400 K. V₂ = 4 · 400 / 300 ≈ 5,33 L. (Wer mit °C rechnet, kommt auf Unsinn wie 18,8 L.)",
+  },
+  {
+    q: "Ein Gas in einem geschlossenen, starren Behälter hat bei 300 K einen Druck von 3 atm. Wie groß ist der Druck, wenn es auf 600 K erhitzt wird?",
+    options: ["1,5 atm", "3 atm", "6 atm", "9 atm"],
+    answer: 2,
+    explain: "Gay-Lussac: P/T ist konstant. Die Kelvin-Temperatur hat sich verdoppelt → der Druck verdoppelt sich auch: 6 atm. Darum können Reifen bei Hitze platzen!",
+  },
+  {
+    q: "0,5 mol eines idealen Gases befinden sich bei 273 K in einem 11,2-L-Behälter. Wie groß ist der Druck ungefähr? (R = 0,082 L·atm/(mol·K))",
+    options: ["0,5 atm", "1 atm", "2 atm", "22,4 atm"],
+    answer: 1,
+    explain: "P = nRT / V = 0,5 · 0,082 · 273 / 11,2 ≈ 1 atm. (Unter Normbedingungen nimmt 1 mol Gas 22,4 L ein.)",
+  },
+  {
+    q: "2 mol eines idealen Gases erzeugen bei 300 K einen Druck von 4 atm. Wie groß ist das Volumen? (R = 0,082 L·atm/(mol·K))",
+    options: ["6,15 L", "12,3 L", "24,6 L", "49,2 L"],
+    answer: 1,
+    explain: "V = nRT / P = 2 · 0,082 · 300 / 4 = 12,3 L.",
+  },
+  {
+    q: "Bei konstantem Druck und konstanter Temperatur nehmen 2 mol Gas 44,8 L ein. Welches Volumen nehmen 3 mol unter denselben Bedingungen ein?",
+    options: ["22,4 L", "44,8 L", "67,2 L", "89,6 L"],
+    answer: 2,
+    explain: "Avogadro: V/n ist konstant → 44,8 / 2 = 22,4 L/mol. 3 mol · 22,4 L/mol = 67,2 L.",
+  },
+  {
+    q: "Die Luftblasen, die ein Taucher ausatmet, werden beim Aufsteigen zur Oberfläche größer. Welches Gesetz erklärt das?",
+    options: ["Gesetz von Boyle-Mariotte", "Gesetz von Charles", "Gesetz von Avogadro", "Massenerhaltung"],
+    answer: 0,
+    explain: "Beim Aufsteigen sinkt der Wasserdruck; bei etwa gleicher Temperatur bedeutet weniger Druck ein größeres Volumen (Boyle-Mariotte).",
+  },
+  {
+    q: "Wie viel Kelvin sind −73 °C?",
+    options: ["−73 K", "73 K", "200 K", "346 K"],
+    answer: 2,
+    explain: "K = °C + 273 → −73 + 273 = 200 K. Auf der Kelvin-Skala gibt es keine negativen Temperaturen; der tiefste Wert ist 0 K (absoluter Nullpunkt).",
+  },
+];
+
+export const QUESTIONS: Localized<QuizQuestion[]> = { tr: TR, en: EN, de: DE };

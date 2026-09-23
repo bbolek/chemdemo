@@ -56,7 +56,7 @@ function Tile({ label, value, unit, sub, color, bar, locked }: { label: string; 
     <div className={`relative rounded-2xl border-[3px] border-ink p-2.5 ${color}`}>
       <div className="flex flex-wrap items-center justify-between gap-x-1 text-xs font-bold text-ink-soft">
         <span>{label}</span>
-        {locked && <span className="whitespace-nowrap" title={t("sabit", "constant")}>🔒 {t("sabit", "constant")}</span>}
+        {locked && <span className="whitespace-nowrap" title={t("sabit", "constant", "konstant")}>🔒 {t("sabit", "constant", "konstant")}</span>}
       </div>
       <div className="font-display text-2xl leading-tight font-extrabold tabular-nums">
         {value} <span className="text-sm font-bold">{unit}</span>
@@ -85,7 +85,7 @@ function PressureDial({ P, maxP, limitP }: { P: number; maxP: number; limitP?: n
   const { t, lang } = useLang();
   return (
     <div className={`relative flex flex-col items-center rounded-2xl border-[3px] border-ink p-2 ${danger ? "bg-pink" : "bg-lemon"}`}>
-      <span className="self-start text-xs font-bold text-ink-soft">{t("Basınç P", "Pressure P")}</span>
+      <span className="self-start text-xs font-bold text-ink-soft">{t("Basınç P", "Pressure P", "Druck P")}</span>
       <svg viewBox="0 0 120 106" className="w-full max-w-[150px]">
         <path d={arc(-120, 120, 44)} stroke="#fff" strokeWidth={12} fill="none" strokeLinecap="round" />
         <path d={arc(-120, a(P), 44)} stroke={danger ? "#ff5a7a" : "#8cc8ff"} strokeWidth={12} fill="none" strokeLinecap="round" />
@@ -139,12 +139,12 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
 
   const off = popped;
   const vReason = locks.pFixed
-    ? t("Piston serbest: sabit basınçta hacim kendiliğinden ayarlanır", "Piston floats freely: at constant pressure the volume adjusts by itself")
+    ? t("Piston serbest: sabit basınçta hacim kendiliğinden ayarlanır", "Piston floats freely: at constant pressure the volume adjusts by itself", "Kolben beweglich: Bei konstantem Druck stellt sich das Volumen von selbst ein")
     : locks.V
-      ? t("Piston kilitli: hacim sabit", "Piston locked: volume is constant")
+      ? t("Piston kilitli: hacim sabit", "Piston locked: volume is constant", "Kolben blockiert: Volumen konstant")
       : "";
-  const heatReason = locks.T ? (tLockMsg ?? t("Sıcaklık sabit (termostat açık)", "Temperature is constant (thermostat on)")) : "";
-  const nReason = locks.n ? t("Kapak kapalı: mol sayısı sabit", "Lid closed: number of moles is constant") : "";
+  const heatReason = locks.T ? (tLockMsg ?? t("Sıcaklık sabit (termostat açık)", "Temperature is constant (thermostat on)", "Temperatur konstant (Thermostat an)")) : "";
+  const nReason = locks.n ? t("Kapak kapalı: mol sayısı sabit", "Lid closed: number of moles is constant", "Deckel zu: Stoffmenge konstant") : "";
   const celsius = state.T - 273;
 
   return (
@@ -167,17 +167,17 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
             className="absolute top-2 right-2 rounded-full border-2 border-ink bg-white px-2.5 py-1 text-xs font-bold"
             onClick={() => (setSoundOn((s) => !s), play("click"))}
           >
-            {soundOn ? t("🔊 çarpışma sesi", "🔊 collision sound") : t("🔈 ses kapalı", "🔈 sound off")}
+            {soundOn ? t("🔊 çarpışma sesi", "🔊 collision sound", "🔊 Stoßgeräusch") : t("🔈 ses kapalı", "🔈 sound off", "🔈 Ton aus")}
           </button>
           <span className="absolute top-8 left-2 rounded-full border-2 border-ink bg-white/90 px-2 py-0.5 text-xs font-bold">
-            {t("1 kedi", "1 cat")} = {f(0.1, 1)} mol
+            {t("1 kedi", "1 cat", "1 Katze")} = {f(0.1, 1)} mol
           </span>
         </div>
 
         {/* Hacim */}
         <div className="flex flex-col gap-1">
           <label className="flex items-center justify-between text-sm font-bold">
-            <span>{t("🟪 Piston (Hacim V)", "🟪 Piston (Volume V)")}</span>
+            <span>{t("🟪 Piston (Hacim V)", "🟪 Piston (Volume V)", "🟪 Kolben (Volumen V)")}</span>
             <span className="tabular-nums">{f(state.V, 1)} L</span>
           </label>
           <input
@@ -190,7 +190,7 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
             onChange={(e) => setV(+e.target.value)}
             onPointerDown={whoosh}
             className="gz-range w-full"
-            aria-label={t("Hacim", "Volume")}
+            aria-label={t("Hacim", "Volume", "Volumen")}
           />
           {vReason && <p className="text-xs font-semibold text-ink-soft">🔒 {vReason}</p>}
         </div>
@@ -198,13 +198,13 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
         {/* Sıcaklık */}
         <div className="flex flex-col gap-1">
           <label className="flex items-center justify-between text-sm font-bold">
-            <span>{t("🌡️ Sıcaklık T", "🌡️ Temperature T")}</span>
+            <span>{t("🌡️ Sıcaklık T", "🌡️ Temperature T", "🌡️ Temperatur T")}</span>
             <span className="tabular-nums">
               {Math.round(state.T)} K <span className="text-ink-soft">({Math.round(celsius)} °C)</span>
             </span>
           </label>
           <div className="flex items-center gap-2">
-            <HoldButton label={t("Soğut", "Cool")} className="bg-sky-deep" disabled={locks.T || off} onStep={() => (setT((t) => t - 10), play("drip"))}>
+            <HoldButton label={t("Soğut", "Cool", "Abkühlen")} className="bg-sky-deep" disabled={locks.T || off} onStep={() => (setT((t) => t - 10), play("drip"))}>
               🧊
             </HoldButton>
             <input
@@ -216,9 +216,9 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
               disabled={locks.T || off}
               onChange={(e) => setT(+e.target.value)}
               className="gz-range min-w-0 flex-1"
-              aria-label={t("Sıcaklık", "Temperature")}
+              aria-label={t("Sıcaklık", "Temperature", "Temperatur")}
             />
-            <HoldButton label={t("Isıt", "Heat")} className="bg-peach-deep" disabled={locks.T || off} onStep={() => (setT((t) => t + 10), play("bubble"))}>
+            <HoldButton label={t("Isıt", "Heat", "Erhitzen")} className="bg-peach-deep" disabled={locks.T || off} onStep={() => (setT((t) => t + 10), play("bubble"))}>
               🔥
             </HoldButton>
           </div>
@@ -228,13 +228,13 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
         {/* Mol */}
         <div className="flex flex-col gap-1">
           <label className="flex items-center justify-between text-sm font-bold">
-            <span>{t("🐱 Gaz kedisi sayısı (n)", "🐱 Number of gas cats (n)")}</span>
+            <span>{t("🐱 Gaz kedisi sayısı (n)", "🐱 Number of gas cats (n)", "🐱 Anzahl Gas-Katzen (n)")}</span>
             <span className="tabular-nums">
-              {state.cats} {t("kedi", state.cats === 1 ? "cat" : "cats")} = {f(state.n, 1)} mol
+              {state.cats} {t("kedi", state.cats === 1 ? "cat" : "cats", state.cats === 1 ? "Katze" : "Katzen")} = {f(state.n, 1)} mol
             </span>
           </label>
           <div className="flex items-center gap-2">
-            <HoldButton label={t("Kedi çıkar", "Remove a cat")} className="bg-white" disabled={locks.n || off || state.cats <= CAT_MIN} onStep={() => (setCats((c) => c - 1), play("pop"))}>
+            <HoldButton label={t("Kedi çıkar", "Remove a cat", "Katze entfernen")} className="bg-white" disabled={locks.n || off || state.cats <= CAT_MIN} onStep={() => (setCats((c) => c - 1), play("pop"))}>
               ➖
             </HoldButton>
             <div className="flex min-w-0 flex-1 flex-wrap gap-0.5 rounded-full border-2 border-ink/20 bg-white/70 px-2 py-1.5">
@@ -243,7 +243,7 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
               ))}
             </div>
             <HoldButton
-              label={t("Kedi ekle", "Add a cat")}
+              label={t("Kedi ekle", "Add a cat", "Katze hinzufügen")}
               className="bg-mint-deep"
               disabled={locks.n || off || state.cats >= CAT_MAX}
               onStep={() => (setCats((c) => c + 1), play(Math.random() < 0.25 ? "meow" : "pop"))}
@@ -260,9 +260,9 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
         <div className="card flex flex-col gap-3 p-3 md:p-4">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
             <PressureDial P={state.P} maxP={[10, 25, 50, 100, 200].find((m) => m >= Math.max(state.P, (limitP ?? 0) * 1.25)) ?? 200} limitP={limitP} />
-            <Tile label={t("Hacim V", "Volume V")} value={f(state.V, 1)} unit="L" color="bg-lavender" bar={state.V / VMAX} locked={locks.V && !locks.pFixed} sub={locks.pFixed ? `${t("P sabit", "P fixed")}: ${f(state.Pfix, 2)} atm` : undefined} />
-            <Tile label={t("Sıcaklık T", "Temperature T")} value={`${Math.round(state.T)}`} unit="K" sub={`= ${Math.round(celsius)} °C + 273`} color="bg-peach" bar={state.T / TMAX} locked={locks.T} />
-            <Tile label={t("Mol n", "Moles n")} value={f(state.n, 1)} unit="mol" color="bg-mint" bar={state.cats / CAT_MAX} locked={locks.n} />
+            <Tile label={t("Hacim V", "Volume V", "Volumen V")} value={f(state.V, 1)} unit="L" color="bg-lavender" bar={state.V / VMAX} locked={locks.V && !locks.pFixed} sub={locks.pFixed ? `${t("P sabit", "P fixed", "P konstant")}: ${f(state.Pfix, 2)} atm` : undefined} />
+            <Tile label={t("Sıcaklık T", "Temperature T", "Temperatur T")} value={`${Math.round(state.T)}`} unit="K" sub={`= ${Math.round(celsius)} °C + 273`} color="bg-peach" bar={state.T / TMAX} locked={locks.T} />
+            <Tile label={t("Mol n", "Moles n", "Stoffmenge n")} value={f(state.n, 1)} unit="mol" color="bg-mint" bar={state.cats / CAT_MAX} locked={locks.n} />
           </div>
           <div className="rounded-2xl border-2 border-dashed border-ink/30 bg-cream px-3 py-2 text-center text-sm">
             <div className="font-display text-lg font-bold">P · V = n · R · T</div>
@@ -273,7 +273,7 @@ export default function GasLab({ api, mode, locks, limitV, limitP, targetV, popp
               {f(state.P * state.V, 2)} = {f(state.n * R * state.T, 2)} ✔
             </div>
           </div>
-          {state.atStop && !popped && <p className="rounded-xl bg-lemon px-3 py-1 text-center text-sm font-bold">{t("⚠️ Piston sınıra dayandı! Artık basınç da değişiyor.", "⚠️ The piston hit its limit! Now the pressure changes too.")}</p>}
+          {state.atStop && !popped && <p className="rounded-xl bg-lemon px-3 py-1 text-center text-sm font-bold">{t("⚠️ Piston sınıra dayandı! Artık basınç da değişiyor.", "⚠️ The piston hit its limit! Now the pressure changes too.", "⚠️ Der Kolben ist am Anschlag! Jetzt ändert sich auch der Druck.")}</p>}
         </div>
         {showGraph && (
           <div className="card p-3 md:p-4">
