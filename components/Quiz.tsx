@@ -126,13 +126,13 @@ export default function Quiz({ questions, catColor = "#ffe5cc", onFinish }: Prop
           </div>
 
           {picked !== null && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 flex items-center gap-3">
-              <Cat color={catColor} mood={correct ? "happy" : "sad"} size={80} bounce={false} />
-              <div className="flex-1">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 flex flex-wrap items-center gap-3">
+              <Cat color={catColor} mood={correct ? "happy" : "sad"} size={64} bounce={false} className="shrink-0" />
+              <div className="min-w-0 flex-1 basis-52">
                 <p className="font-display text-lg font-bold">{correct ? t("Doğru! 🎉", "Correct! 🎉") : t("Hmm, olmadı 🙀", "Hmm, not quite 🙀")}</p>
                 <p>{q.explain}</p>
               </div>
-              <button type="button" className="btn bg-lemon-deep" onClick={next}>
+              <button type="button" className="btn ml-auto whitespace-nowrap bg-lemon-deep" onClick={next}>
                 {i < questions.length - 1 ? t("Sonraki →", "Next →") : t("Sonuç 🏁", "Results 🏁")}
               </button>
             </motion.div>
