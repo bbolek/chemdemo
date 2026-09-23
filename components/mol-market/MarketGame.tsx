@@ -28,7 +28,7 @@ function Jar({ sym, onTap, active }: { sym: El; onTap: (el: HTMLElement) => void
       animate={bump ? { rotate: [0, -10, 8, 0], y: [0, -10, 0] } : {}}
       key={bump}
       className={`relative flex flex-col items-center ${active ? "" : "opacity-90"}`}
-      aria-label={`${pick(e.name)} (${e.sym}), ${fmt(e.mass, lang)} ${t("gram bölü mol", "grams per mole")}`}
+      aria-label={`${pick(e.name)} (${e.sym}), ${fmt(e.mass, lang)} ${t("gram bölü mol", "grams per mole", "Gramm pro Mol")}`}
     >
       <svg viewBox="0 0 60 70" className="w-12 sm:w-14" aria-hidden>
         <rect x={12} y={4} width={36} height={10} rx={4} fill={e.deep} stroke="#4a4063" strokeWidth={3} />
@@ -68,13 +68,13 @@ function Coins({ burst }: { burst: number }) {
   );
 }
 
-/** "." is the internal decimal token; it is shown as "," in Turkish. */
+/** "." is the internal decimal token; it is shown as "," in Turkish and German. */
 const KEYS = ["7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "⌫"];
 
 export default function MarketGame({ onNext }: { onNext: () => void }) {
   const { play } = useSound();
   const { t, pick, lang } = useLang();
-  const dec = (s: string) => (lang === "tr" ? s.replace(".", ",") : s);
+  const dec = (s: string) => (lang === "en" ? s : s.replace(".", ","));
   const [idx, setIdx] = useState(0);
   const [present, setPresent] = useState(true);
   const [paid, setPaid] = useState(false);
@@ -222,24 +222,24 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
           <Cat color={MINNOS.color} accent={MINNOS.accent} accessory="chef" mood="love" size={130} />
           <Robo mood="excited" holding="clipboard" size={110} />
         </div>
-        <h3 className="text-3xl font-extrabold">{t("Dükkân kapandı! 🌙", "Shop's closed! 🌙")}</h3>
+        <h3 className="text-3xl font-extrabold">{t("Dükkân kapandı! 🌙", "Shop's closed! 🌙", "Feierabend im Laden! 🌙")}</h3>
         <p className="text-xl">
-          {t("Kasada", "The till holds")} <b>{coins}</b> / {max} 🪙{t(" var.", ".")}
+          {t("Kasada", "The till holds", "In der Kasse sind")} <b>{coins}</b> / {max} 🪙{t(" var.", ".", ".")}
         </p>
         <p className="text-4xl">{"⭐".repeat(stars)}</p>
         <p className="text-lg">
           {stars === 3
-            ? t("Efsane kasiyer! Mol hesabında üstüne yok!", "Legendary cashier! Nobody does mole maths better!")
+            ? t("Efsane kasiyer! Mol hesabında üstüne yok!", "Legendary cashier! Nobody does mole maths better!", "Kassen-Legende! Beim Mol-Rechnen macht dir keiner was vor!")
             : stars === 2
-              ? t("Çok iyi! Birkaç ipucuyla harika iş çıkardın.", "Great job! With a few hints you did brilliantly.")
-              : t("Güzel başlangıç! Bir tur daha oynarsan ustalaşırsın.", "Nice start! Play one more round and you'll be a pro.")}
+              ? t("Çok iyi! Birkaç ipucuyla harika iş çıkardın.", "Great job! With a few hints you did brilliantly.", "Sehr gut! Mit ein paar Tipps hast du das super gemacht.")
+              : t("Güzel başlangıç! Bir tur daha oynarsan ustalaşırsın.", "Nice start! Play one more round and you'll be a pro.", "Guter Anfang! Noch eine Runde, und du bist Profi.")}
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           <button type="button" className="btn bg-white" onClick={restart}>
-            {t("Tekrar Oyna 🔁", "Play Again 🔁")}
+            {t("Tekrar Oyna 🔁", "Play Again 🔁", "Nochmal spielen 🔁")}
           </button>
           <button type="button" className="btn bg-lemon-deep" onClick={onNext}>
-            {t("Mol Dönüştürücü ⚖️ →", "Mole Converter ⚖️ →")}
+            {t("Mol Dönüştürücü ⚖️ →", "Mole Converter ⚖️ →", "Mol-Umrechner ⚖️ →")}
           </button>
         </div>
       </motion.div>
@@ -255,7 +255,7 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
         <div className="card relative overflow-hidden bg-gradient-to-b from-sky to-cream p-1">
           <div className="absolute left-3 top-3 z-10 flex gap-2">
             <span className="rounded-full border-2 border-ink bg-white px-3 py-0.5 font-display text-sm font-bold">
-              {t("Müşteri", "Customer")} {idx + 1} / {ORDERS.length}
+              {t("Müşteri", "Customer", "Kunde")} {idx + 1} / {ORDERS.length}
             </span>
           </div>
           <motion.div key={coins} animate={{ scale: [1, 1.25, 1] }} className="absolute right-3 top-3 z-10 rounded-full border-2 border-ink bg-lemon-deep px-3 py-0.5 font-display text-sm font-bold">
@@ -270,12 +270,12 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
             ka={ka}
             bubble={
               paid
-                ? t("Teşekkürler! 💜", "Thank you! 💜")
+                ? t("Teşekkürler! 💜", "Thank you! 💜", "Danke schön! 💜")
                 : order.kind === "basket"
-                  ? t("🧺 Sepet!", "🧺 Basket!")
+                  ? t("🧺 Sepet!", "🧺 Basket!", "🧺 Korb!")
                   : order.kind === "choice"
-                    ? t("🤔 Kaç tane?", "🤔 How many?")
-                    : t("🧮 Hesap!", "🧮 Let's count!")
+                    ? t("🤔 Kaç tane?", "🤔 How many?", "🤔 Wie viele?")
+                    : t("🧮 Hesap!", "🧮 Let's count!", "🧮 Rechnen!")
             }
           />
         </div>
@@ -292,12 +292,12 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
               style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent 0 27px, #f3ecff 27px 29px)" }}
             >
               <span className="font-display text-sm font-bold text-ink-soft">
-                🧾 {t("Sipariş fişi", "Order slip")} · {pick(order.customer.name)}{" "}
+                🧾 {t("Sipariş fişi", "Order slip", "Bestellzettel")} · {pick(order.customer.name)}{" "}
                 {order.kind === "basket"
-                  ? t("· sepet hazırla", "· pack the basket")
+                  ? t("· sepet hazırla", "· pack the basket", "· Korb packen")
                   : order.kind === "choice"
-                    ? t("· doğru olanı seç", "· pick the right one")
-                    : t("· kasada hesapla", "· work it out at the till")}
+                    ? t("· doğru olanı seç", "· pick the right one", "· Richtiges wählen")
+                    : t("· kasada hesapla", "· work it out at the till", "· an der Kasse rechnen")}
               </span>
               <p className="text-lg font-semibold leading-snug md:text-xl">{pick(order.text)}</p>
             </motion.div>
@@ -309,11 +309,11 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
             <motion.div key={`hint-${tries}`} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="card flex items-center gap-3 bg-sky p-3">
               <Robo mood="thinking" holding="clipboard" size={60} bounce={false} />
               <div className="flex-1">
-                <p className="font-display font-bold">{t("Robo'nun ipucu 💡", "Robo's hint 💡")}</p>
+                <p className="font-display font-bold">{t("Robo'nun ipucu 💡", "Robo's hint 💡", "Robos Tipp 💡")}</p>
                 <p>{pick(order.hint)}</p>
                 {tries >= 2 && (
                   <p className="mt-1 font-semibold text-ink-soft">
-                    {t("Çözüm", "Solution")}: {pick(order.solution)}
+                    {t("Çözüm", "Solution", "Lösung")}: {pick(order.solution)}
                   </p>
                 )}
               </div>
@@ -326,9 +326,9 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
       <div className="flex flex-col gap-3">
         <div className="card bg-peach p-3">
           <div className="mb-1 flex items-center justify-between">
-            <h3 className="font-display text-lg font-bold">{t("🫙 Element rafı", "🫙 Element shelf")}</h3>
+            <h3 className="font-display text-lg font-bold">{t("🫙 Element rafı", "🫙 Element shelf", "🫙 Elementregal")}</h3>
             <span className="text-right text-xs font-semibold text-ink-soft sm:text-sm">
-              {order.kind === "basket" && !paid ? t("Kavanoza dokun = 1 mol ekle", "Tap a jar = add 1 mol") : t("Kavanoza dokun = etiketi oku", "Tap a jar = read its label")}
+              {order.kind === "basket" && !paid ? t("Kavanoza dokun = 1 mol ekle", "Tap a jar = add 1 mol", "Glas antippen = 1 mol dazu") : t("Kavanoza dokun = etiketi oku", "Tap a jar = read its label", "Glas antippen = Etikett lesen")}
             </span>
           </div>
           <div className="relative">
@@ -355,9 +355,9 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
           <Coins burst={burst} />
           {order.kind === "basket" && (
             <div className="flex flex-col gap-3">
-              <h3 className="font-display text-lg font-bold">{t("🧺 Müşterinin sepeti", "🧺 Customer's basket")}</h3>
+              <h3 className="font-display text-lg font-bold">{t("🧺 Müşterinin sepeti", "🧺 Customer's basket", "🧺 Korb der Kundschaft")}</h3>
               <div className="flex min-h-[64px] flex-wrap items-center gap-2 rounded-2xl border-2 border-dashed border-ink/40 bg-white/70 p-2">
-                {basketItems.length === 0 && <span className="px-2 text-ink-soft">{t("Sepet boş. Raftan kavanoz seç!", "The basket is empty. Pick jars from the shelf!")}</span>}
+                {basketItems.length === 0 && <span className="px-2 text-ink-soft">{t("Sepet boş. Raftan kavanoz seç!", "The basket is empty. Pick jars from the shelf!", "Der Korb ist leer. Nimm Gläser aus dem Regal!")}</span>}
                 <AnimatePresence>
                   {basketItems.map(([s, n]) => (
                     <motion.div
@@ -375,7 +375,7 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
                       {!paid && (
                         <button
                           type="button"
-                          aria-label={t(`${s} azalt`, `Remove one ${s}`)}
+                          aria-label={t(`${s} azalt`, `Remove one ${s}`, `Ein ${s} entfernen`)}
                           className="ml-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-ink bg-white text-lg leading-none"
                           onClick={() => {
                             play("click");
@@ -392,10 +392,10 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
               {!paid && (
                 <div className="flex flex-wrap justify-end gap-2">
                   <button type="button" className="btn bg-white !py-2" onClick={() => (play("click"), setBasket({}))}>
-                    {t("Boşalt 🗑️", "Empty 🗑️")}
+                    {t("Boşalt 🗑️", "Empty 🗑️", "Leeren 🗑️")}
                   </button>
                   <button type="button" className="btn bg-mint-deep !py-2" onClick={checkBasket}>
-                    {t("Kasaya ver ✓", "Ring it up ✓")}
+                    {t("Kasaya ver ✓", "Ring it up ✓", "Abkassieren ✓")}
                   </button>
                 </div>
               )}
@@ -404,7 +404,7 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
 
           {order.kind === "register" && (
             <div className="flex flex-col gap-3">
-              <h3 className="font-display text-lg font-bold">{t("🧮 Yazar kasa", "🧮 Cash register")}</h3>
+              <h3 className="font-display text-lg font-bold">{t("🧮 Yazar kasa", "🧮 Cash register", "🧮 Registrierkasse")}</h3>
               <div className="flex items-center justify-between gap-2 rounded-2xl border-3 border-ink bg-[#2f3a4a] px-4 py-3 font-mono text-2xl text-[#b8ffdc] shadow-inner">
                 <span className="text-base text-[#b8ffdc]/70">{order.label}</span>
                 <span className="flex-1 text-right tracking-wider">
@@ -429,7 +429,7 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
                     C
                   </button>
                   <button type="button" className="btn !rounded-2xl bg-mint-deep !px-0 !py-2 text-lg" style={{ gridColumn: 4, gridRow: "2 / span 3" }} onClick={checkRegister}>
-                    {t("Öde", "Pay")}
+                    {t("Öde", "Pay", "Zahlen")}
                     <br />✓
                   </button>
                 </div>
@@ -439,7 +439,7 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
 
           {order.kind === "choice" && (
             <div className="flex flex-col gap-3">
-              <h3 className="font-display text-lg font-bold">{t("🧮 Kasa ekranı: doğru sayıyı seç", "🧮 Till screen: pick the right number")}</h3>
+              <h3 className="font-display text-lg font-bold">{t("🧮 Kasa ekranı: doğru sayıyı seç", "🧮 Till screen: pick the right number", "🧮 Kassendisplay: Wähle die richtige Zahl")}</h3>
               <div className="grid grid-cols-2 gap-2">
                 {order.options.map((o, k) => (
                   <motion.button
@@ -465,7 +465,7 @@ export default function MarketGame({ onNext }: { onNext: () => void }) {
               </p>
               <p className="font-semibold">🧾 {pick(order.solution)}</p>
               <button type="button" className="btn self-end bg-lemon-deep" onClick={nextCustomer}>
-                {idx === ORDERS.length - 1 ? t("Dükkânı kapat 🌙", "Close the shop 🌙") : t("Sıradaki müşteri →", "Next customer →")}
+                {idx === ORDERS.length - 1 ? t("Dükkânı kapat 🌙", "Close the shop 🌙", "Laden schließen 🌙") : t("Sıradaki müşteri →", "Next customer →", "Nächster Kunde →")}
               </button>
             </motion.div>
           )}

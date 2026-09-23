@@ -2,7 +2,7 @@ import type { QuizQuestion } from "@/components/Quiz";
 import type { Localized } from "@/lib/i18n";
 
 /**
- * Same order, same answer indexes and same numeric values in both languages.
+ * Same order, same answer indexes and same numeric values in all languages.
  * Only wording and decimal notation differ.
  */
 export const QUESTIONS: Localized<QuizQuestion[]> = {
@@ -116,6 +116,62 @@ export const QUESTIONS: Localized<QuizQuestion[]> = {
       options: ["1.204×10²³", "6.02×10²³", "3.01×10²³", "4.48×10²³"],
       answer: 0,
       explain: "n = 4.48 / 22.4 = 0.2 mol. N = 0.2 × 6.02×10²³ = 1.204×10²³ molecules.",
+    },
+  ],
+  de: [
+    {
+      q: "Wie viele Teilchen stecken in 1 mol eines Stoffes?",
+      options: ["12", "6,02·10²³", "22,4", "6,02·10²²"],
+      answer: 1,
+      explain: "1 mol = so viele Teilchen, wie die Avogadro-Konstante angibt: Nₐ = 6,02·10²³ mol⁻¹. Wie ein Dutzend, nur eine riesig viel größere Packung!",
+    },
+    {
+      q: "Wie groß ist die molare Masse von Methangas, CH₄? (C = 12, H = 1)",
+      options: ["13 g/mol", "16 g/mol", "28 g/mol", "48 g/mol"],
+      answer: 1,
+      explain: "M = 12 + 4·1 = 16 g/mol.",
+    },
+    {
+      q: "Wie viel mol sind 90 Gramm Wasser (H₂O)? (H = 1, O = 16)",
+      options: ["2 mol", "4 mol", "5 mol", "9 mol"],
+      answer: 2,
+      explain: "M(H₂O) = 18 g/mol. n = m / M = 90 / 18 = 5 mol.",
+    },
+    {
+      q: "Welche Masse haben 0,5 mol CO₂? (C = 12, O = 16)",
+      options: ["11 g", "22 g", "44 g", "88 g"],
+      answer: 1,
+      explain: "M(CO₂) = 12 + 2·16 = 44 g/mol. m = n · M = 0,5 · 44 = 22 g.",
+    },
+    {
+      q: "Wie viel mol sind 67,2 Liter O₂-Gas bei Normbedingungen?",
+      options: ["1 mol", "2 mol", "3 mol", "6 mol"],
+      answer: 2,
+      explain: "Bei Normbedingungen nimmt 1 mol Gas 22,4 L ein. n = 67,2 / 22,4 = 3 mol.",
+    },
+    {
+      q: "Wie viel mol H-Atome sind insgesamt in 2 mol NH₃ enthalten?",
+      options: ["2 mol", "3 mol", "5 mol", "6 mol"],
+      answer: 3,
+      explain: "1 mol NH₃ enthält 3 mol H-Atome. 2 mol NH₃ → 2·3 = 6 mol H-Atome.",
+    },
+    {
+      q: "Welche Masse haben 1,204·10²⁴ H₂-Moleküle? (H = 1)",
+      options: ["1 g", "2 g", "4 g", "12 g"],
+      answer: 2,
+      explain: "n = N / Nₐ = 1,204·10²⁴ / 6,02·10²³ = 2 mol. M(H₂) = 2 g/mol → m = 2 · 2 = 4 g.",
+    },
+    {
+      q: "Wie groß ist die molare Masse von Mg(OH)₂? (Mg = 24, O = 16, H = 1)",
+      options: ["41 g/mol", "58 g/mol", "57 g/mol", "74 g/mol"],
+      answer: 1,
+      explain: "Die 2 hinter der Klammer multipliziert die ganze OH-Gruppe: 24 + 2·(16 + 1) = 24 + 34 = 58 g/mol.",
+    },
+    {
+      q: "Wie viele Moleküle enthält eine Portion CH₄-Gas, die bei Normbedingungen 4,48 L einnimmt?",
+      options: ["1,204·10²³", "6,02·10²³", "3,01·10²³", "4,48·10²³"],
+      answer: 0,
+      explain: "n = 4,48 / 22,4 = 0,2 mol. N = 0,2 · 6,02·10²³ = 1,204·10²³ Moleküle.",
     },
   ],
 };
