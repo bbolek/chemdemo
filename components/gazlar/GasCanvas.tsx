@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useLang } from "@/lib/i18n";
 import { useSound } from "@/lib/sound";
 import { clamp, VMAX, VMIN, type GasState, type Locks } from "./gas";
 
@@ -126,6 +127,9 @@ export default function GasCanvas(props: Props) {
   propsRef.current = props;
   const { play } = useSound();
   const playRef = useRef(play);
+  const { lang, t } = useLang();
+  const langRef = useRef(lang);
+  langRef.current = lang;
   playRef.current = play;
   const dragging = useRef(false);
   const geo = useRef({ yb: 0, Hmax: 1, pY: 0, cx: 0 });
@@ -170,6 +174,8 @@ export default function GasCanvas(props: Props) {
       if (!visible) return;
       const p = propsRef.current;
       const { state, locks } = p;
+      const en = langRef.current === "en";
+      const numStr = (x: number) => x.toLocaleString(en ? "en-US" : "tr-TR");
 
       // geometri
       const bw = Math.min(cw - 44 - DX, 430);
@@ -371,8 +377,8 @@ export default function GasCanvas(props: Props) {
         ctx.fillText(label, bx1 - 4, y - 5);
         ctx.restore();
       };
-      if (p.targetV) dash(p.targetV, "#2fae7f", `🎯 hedef ${p.targetV.toLocaleString("tr-TR")} L`);
-      if (p.limitV) dash(p.limitV, "#ff5a7a", `💥 patlama sınırı ${p.limitV.toLocaleString("tr-TR")} L`);
+      if (p.targetV) dash(p.targetV, "#2fae7f", `🎯 ${en ? "target" : "hedef"} ${numStr(p.targetV)} L`);
+      if (p.limitV) dash(p.limitV, "#ff5a7a", `💥 ${en ? "burst limit" : "patlama sınırı"} ${numStr(p.limitV)} L`);
 
       // tanecikler
       const hot = dispT > 450;
@@ -421,7 +427,7 @@ export default function GasCanvas(props: Props) {
           ctx.fillStyle = INK;
           ctx.font = "bold 12px system-ui";
           ctx.textAlign = "center";
-          ctx.fillText("⇕ sürükle", rx + 6, Math.max(2, top - 34) + 14);
+          ctx.fillText(en ? "⇕ drag" : "⇕ sürükle", rx + 6, Math.max(2, top - 34) + 14);
         }
         // üst yüz
         ctx.fillStyle = "#e8dcff";
@@ -464,7 +470,7 @@ export default function GasCanvas(props: Props) {
           ctx.fillStyle = INK;
           ctx.font = "bold 12px system-ui";
           ctx.textAlign = "center";
-          ctx.fillText("sabit P", wx, top + DY / 2 - 9);
+          ctx.fillText(en ? "fixed P" : "sabit P", wx, top + DY / 2 - 9);
         }
         if (locks.V && !locks.pFixed) {
           ctx.font = "18px system-ui";
@@ -500,7 +506,7 @@ export default function GasCanvas(props: Props) {
       ctx.font = "bold 13px system-ui";
       ctx.fillStyle = INK;
       const rate = hitTimes.length;
-      ctx.fillText(`💥 ${rate} çarpışma/sn`, 10, 18);
+      ctx.fillText(`💥 ${rate} ${en ? "collisions/s" : "çarpışma/sn"}`, 10, 18);
     };
     raf = requestAnimationFrame(frame);
     return () => {
@@ -553,7 +559,7 @@ export default function GasCanvas(props: Props) {
         onPointerUp={onUp}
         onPointerCancel={onUp}
         style={{ touchAction: canDrag ? "none" : "auto", display: "block" }}
-        aria-label="Gaz kutusu: kedi tanecikler, piston ve ısıtıcı"
+        aria-label={t("Gaz kutusu: kedi tanecikler, piston ve ısıtıcı", "Gas box: cat particles, piston and heater")}
         role="img"
       />
     </div>

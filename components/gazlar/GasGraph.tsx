@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useLang, type Lang } from "@/lib/i18n";
 import { CAT_MAX, fmt, MOL_PER_CAT, R, TMAX, VMAX, VMIN, type GasMode, type GasPoint, type GasState } from "./gas";
 
 const W = 320;
@@ -34,7 +35,8 @@ interface Cfg {
   yDec: number;
 }
 
-function config(mode: GasMode, s: GasState): Cfg {
+function config(mode: GasMode, s: GasState, lang: Lang): Cfg {
+  const t = (tr: string, en: string) => (lang === "en" ? en : tr);
   const nRT = s.n * R * s.T;
   if (mode === "charles") {
     const k = (s.n * R) / s.Pfix;
@@ -44,16 +46,16 @@ function config(mode: GasMode, s: GasState): Cfg {
         return { x: t, y: k * t };
       });
     return {
-      title: "V – T grafiği (doğru!)",
-      xLabel: "Sıcaklık T (K)",
-      yLabel: "Hacim V (L)",
+      title: t("V – T grafiği (doğru!)", "V – T graph (straight line!)"),
+      xLabel: t("Sıcaklık T (K)", "Temperature T (K)"),
+      yLabel: t("Hacim V (L)", "Volume V (L)"),
       xMax: TMAX,
       yMax: VMAX,
       x: s.T,
       y: s.V,
       curve: pts(100, TMAX),
       dashed: pts(0, 100),
-      note: "Doğru 0 K'e (−273 °C) uzanır",
+      note: t("Doğru 0 K'e (−273 °C) uzanır", "The line extends to 0 K (−273 °C)"),
       xDec: 0,
       yDec: 1,
     };
@@ -62,9 +64,9 @@ function config(mode: GasMode, s: GasState): Cfg {
     const k = (s.n * R) / s.V;
     const yMax = niceCeil(k * TMAX * 1.05);
     return {
-      title: "P – T grafiği",
-      xLabel: "Sıcaklık T (K)",
-      yLabel: "Basınç P (atm)",
+      title: t("P – T grafiği", "P – T graph"),
+      xLabel: t("Sıcaklık T (K)", "Temperature T (K)"),
+      yLabel: t("Basınç P (atm)", "Pressure P (atm)"),
       xMax: TMAX,
       yMax,
       x: s.T,
@@ -77,7 +79,7 @@ function config(mode: GasMode, s: GasState): Cfg {
         { x: 0, y: 0 },
         { x: 100, y: k * 100 },
       ],
-      note: "P / T = sabit",
+      note: t("P / T = sabit", "P / T = constant"),
       xDec: 0,
       yDec: 1,
     };
@@ -86,9 +88,9 @@ function config(mode: GasMode, s: GasState): Cfg {
     const k = (R * s.T) / s.Pfix;
     const nMax = CAT_MAX * MOL_PER_CAT;
     return {
-      title: "V – n grafiği",
-      xLabel: "Mol sayısı n (mol)",
-      yLabel: "Hacim V (L)",
+      title: t("V – n grafiği", "V – n graph"),
+      xLabel: t("Mol sayısı n (mol)", "Amount n (mol)"),
+      yLabel: t("Hacim V (L)", "Volume V (L)"),
       xMax: nMax,
       yMax: VMAX,
       x: s.n,
@@ -97,7 +99,7 @@ function config(mode: GasMode, s: GasState): Cfg {
         { x: 0, y: 0 },
         { x: nMax, y: k * nMax },
       ],
-      note: "V / n = sabit",
+      note: t("V / n = sabit", "V / n = constant"),
       xDec: 1,
       yDec: 1,
     };
@@ -107,22 +109,23 @@ function config(mode: GasMode, s: GasState): Cfg {
   const curve: GasPoint[] = [];
   for (let v = VMIN; v <= VMAX + 1e-9; v += 0.25) curve.push({ x: v, y: nRT / v });
   return {
-    title: mode === "boyle" ? "P – V grafiği (hiperbol)" : "P – V grafiği",
-    xLabel: "Hacim V (L)",
-    yLabel: "Basınç P (atm)",
+    title: mode === "boyle" ? t("P – V grafiği (hiperbol)", "P – V graph (hyperbola)") : t("P – V grafiği", "P – V graph"),
+    xLabel: t("Hacim V (L)", "Volume V (L)"),
+    yLabel: t("Basınç P (atm)", "Pressure P (atm)"),
     xMax: VMAX,
     yMax,
     x: s.V,
     y: s.P,
     curve,
-    note: mode === "boyle" ? "P · V = sabit" : `Eğri: ${fmt(s.n, 1)} mol, ${Math.round(s.T)} K`,
+    note: mode === "boyle" ? t("P · V = sabit", "P · V = constant") : `${t("Eğri", "Curve")}: ${fmt(s.n, 1, lang)} mol, ${Math.round(s.T)} K`,
     xDec: 1,
     yDec: 1,
   };
 }
 
 export default function GasGraph({ mode, state }: { mode: GasMode; state: GasState }) {
-  const c = config(mode, state);
+  const { lang, num } = useLang();
+  const c = config(mode, state, lang);
   const sx = (x: number) => PL + (x / c.xMax) * (W - PL - PR);
   const sy = (y: number) => H - PB - (y / c.yMax) * (H - PT - PB);
   const path = (pts: GasPoint[]) => pts.map((p, i) => `${i ? "L" : "M"}${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(" ");
@@ -160,7 +163,7 @@ export default function GasGraph({ mode, state }: { mode: GasMode; state: GasSta
           <g key={`y${i}`}>
             <line x1={PL} x2={W - PR} y1={sy(t)} y2={sy(t)} stroke="#4a4063" strokeOpacity={0.1} />
             <text x={PL - 6} y={sy(t) + 4} fontSize={10} textAnchor="end" fill="#7d7396">
-              {t.toLocaleString("tr-TR", { maximumFractionDigits: 1 })}
+              {num(Math.round(t * 100) / 100)}
             </text>
           </g>
         ))}
@@ -168,7 +171,7 @@ export default function GasGraph({ mode, state }: { mode: GasMode; state: GasSta
           <g key={`x${i}`}>
             <line y1={PT} y2={H - PB} x1={sx(t)} x2={sx(t)} stroke="#4a4063" strokeOpacity={0.1} />
             <text x={sx(t)} y={H - PB + 14} fontSize={10} textAnchor="middle" fill="#7d7396">
-              {t.toLocaleString("tr-TR", { maximumFractionDigits: 1 })}
+              {num(Math.round(t * 100) / 100)}
             </text>
           </g>
         ))}
@@ -197,7 +200,7 @@ export default function GasGraph({ mode, state }: { mode: GasMode; state: GasSta
           <path d="M-2.5 3 q1.2 1.6 2.5 0 q1.3 1.6 2.5 0" fill="none" stroke="#4a4063" strokeWidth={1.2} />
         </motion.g>
         <text x={W - PR - 4} y={PT - 8} fontSize={11} textAnchor="end" fill="#4a4063" fontWeight={700}>
-          ({fmt(c.x, c.xDec)} ; {fmt(c.y, c.yDec)})
+          ({fmt(c.x, c.xDec, lang)}{lang === "en" ? ", " : " ; "}{fmt(c.y, c.yDec, lang)})
         </text>
       </svg>
     </div>
