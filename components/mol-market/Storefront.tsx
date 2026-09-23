@@ -72,10 +72,7 @@ export default function Storefront({ className = "" }: { className?: string }) {
       {/* door */}
       <Face P={P} p={[F(1.95, 0), F(3.05, 0), F(3.05, 1.95), F(1.95, 1.95)]} fill="#b69cff" />
       <Face P={P} p={[F(2.1, 0.9), F(2.9, 0.9), F(2.9, 1.8), F(2.1, 1.8)]} fill="#e8dcff" sw={2} />
-      <circle cx={P(2.85, D, 0.8)[0]} cy={P(2.85, D, 0.8)[1]} r={3} fill="#ffe066" stroke={INK} strokeWidth={1.5} />
-      <text transform={onPlaneY(P(2.5, D, 1.25))} textAnchor="middle" fontFamily="var(--font-baloo), sans-serif" fontWeight={800} fontSize={lang === "de" ? 7.5 : 10} fill={INK} {...(lang === "de" ? { textLength: 25, lengthAdjust: "spacingAndGlyphs" } : {})}>
-        {t("AÇIK", "OPEN", "GEÖFFNET")}
-      </text>
+      <circle cx={P(2.85, D, 0.5)[0]} cy={P(2.85, D, 0.5)[1]} r={3} fill="#ffe066" stroke={INK} strokeWidth={1.5} />
 
       {/* striped awning */}
       {awning.map((u, k) => (
@@ -92,6 +89,22 @@ export default function Storefront({ className = "" }: { className?: string }) {
         const [cx, cy] = P(u + 0.25, D + 0.75, 1.95);
         return <circle key={u} cx={cx} cy={cy + 1} r={6} fill={k % 2 ? "white" : "#ff9ebb"} stroke={INK} strokeWidth={2} />;
       })}
+
+      {/* "open" plaque hanging on the door, drawn after the awning so it stays visible */}
+      <line x1={P(2.2, D, 1.05)[0]} y1={P(2.2, D, 1.05)[1]} x2={P(2.5, D, 1.2)[0]} y2={P(2.5, D, 1.2)[1]} stroke={INK} strokeWidth={1.5} />
+      <line x1={P(2.8, D, 1.05)[0]} y1={P(2.8, D, 1.05)[1]} x2={P(2.5, D, 1.2)[0]} y2={P(2.5, D, 1.2)[1]} stroke={INK} strokeWidth={1.5} />
+      <Face P={P} p={[F(1.85, 0.68), F(3.15, 0.68), F(3.15, 1.05), F(1.85, 1.05)]} fill="#fff5b8" sw={1.8} />
+      <text
+        transform={onPlaneY(P(2.5, D, 0.78))}
+        textAnchor="middle"
+        fontFamily="var(--font-baloo), sans-serif"
+        fontWeight={800}
+        fontSize={lang === "de" ? 8.5 : 10}
+        fill="#e0668f"
+        {...(lang === "de" ? { textLength: 28, lengthAdjust: "spacingAndGlyphs" } : {})}
+      >
+        {t("AÇIK", "OPEN", "GEÖFFNET")}
+      </text>
 
       {/* side wall banner */}
       <Face P={P} p={[[W, 2.6, 1.0], [W, 0.4, 1.0], [W, 0.4, 2.3], [W, 2.6, 2.3]]} fill="#fff5b8" />
